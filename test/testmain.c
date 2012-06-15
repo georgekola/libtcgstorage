@@ -12,7 +12,7 @@ void test_tcgs_host_basic(void)
 }                     
 
 int main(void)
-{
-	run_test("Basic TCG Storage Host API test:", assert(true));
+{                         
+	run_test("Basic TCG Storage Host API test:", test_tcgs_host_basic());
 	run_end();
 }

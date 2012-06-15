@@ -7,7 +7,7 @@
 #undef NDEBUG
 #endif
 
-#include  <signal.h>
+#include <signal.h>
 #include <setjmp.h>
 #include <stdio.h>
 #include <assert.h>
@@ -52,4 +52,4 @@ static void utst_sigabrt(int dummy)
 
 
 
-#endif /* UTEST_H_ */
+#endif /* UTEST_H_ */  
