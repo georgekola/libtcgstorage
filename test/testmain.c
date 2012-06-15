@@ -27,7 +27,6 @@ void test_tcgs_host_basic_api(void **state)
 	TCGS_InitHost();
 	TCGS_ResetHost();
 	TCGS_DestroyHost();  
-	assert(false);
 }                     
 
 
