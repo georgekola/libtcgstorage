@@ -3,12 +3,13 @@
 ///
 /// the main include file of the library
 /// contains external API of TCG Storage Host
-/// (с) Artem Zankovich
+/// (c) Artem Zankovich
 //////////////////////////////////////////////////////////////////////////////
 #ifndef _LIBTCGSTORAGE_H
 #define _LIBTCGSTORAGE_H  
 
 #include "stdbool.h"
+#include "tcgs_types.h"
 
 /*****************************************************************************
  * \brief Initializes TCG Storage Host

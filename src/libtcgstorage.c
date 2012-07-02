@@ -2,9 +2,11 @@
 /// libtcgstorage.c
 ///
 /// implementation of external API of TCG Storage Host
-/// (с) Artem Zankovich
+///
+/// (c) Artem Zankovich
 //////////////////////////////////////////////////////////////////////////////
 #include "libtcgstorage.h"
+#include "tcgs_types.h"
       
 /*****************************************************************************
  * \brief Initializes TCG Storage Host
@@ -23,7 +25,7 @@
  *****************************************************************************/
 bool TCGS_InitHost(void)
 {
-    return true;
+    return TRUE;
 }
 
 /*****************************************************************************
