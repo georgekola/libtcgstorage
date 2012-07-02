@@ -2,6 +2,8 @@
 *.slo
 *.lo
 *.o
+bin
+*.build
 
 # Compiled Dynamic libraries
 *.so
@@ -14,6 +16,15 @@
 # CMake
 CMakeCache.txt
 CMakeFiles
+CMakeScripts
 Makefile
 cmake_install.cmake
 install_manifest.txt
+
+# Eclipse
+.cproject
+.project
+
+# MacOS
+.DS_Store
+*.xcodeproj

@@ -1,4 +1,4 @@
-set(CMAKE_C_FLAGS "-g -Wall -DUNIT_TESTING")
+set(CMAKE_C_FLAGS "-DUNIT_TESTING")
 
 include_directories (${LIBTCGSTORAGE_SOURCE_DIR}/src) 
 
