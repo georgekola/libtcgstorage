@@ -32,7 +32,7 @@ TCGS_TPerError_t TCGS_ATA_SendCommand(
 }
 
 
-TCGS_IntefaceFunctions_t TCGS_Inerface_ATA_Funcs =
+TCGS_IntefaceFunctions_t TCGS_Interface_ATA_Funcs =
 {
 	(TCGS_SendCommand_t)&TCGS_ATA_SendCommand,
 };

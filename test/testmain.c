@@ -27,6 +27,7 @@ extern void mock_assert(const int result, const char* const expression,
 #include "tcgs_stream.h"
 #include "tcgs_builder.h"
 #include "tcgs_interface.h"
+#include "tcgs_interface_virtual.h"
 
 /**
  * \brief Test for Level0Discovery command
@@ -34,7 +35,8 @@ extern void mock_assert(const int result, const char* const expression,
 void test_tcgs_host_level0discovery(void **state)
 {
 	TCGS_CommandBlock_t commandBlock;
-    TCGS_PrepareInterfaceCommand(LEVEL0_DISCOVERY, NULL, &commandBlock, NULL);
+
+	TCGS_PrepareInterfaceCommand(LEVEL0_DISCOVERY, NULL, &commandBlock, NULL);
 	assert_int_equal(commandBlock.command,   IF_RECV);
 	assert_int_equal(commandBlock.protocolId, 0x01);
 	assert_int_equal(commandBlock.length,     0x01);
@@ -52,7 +54,7 @@ void test_tcgs_host_level0discovery_virtual(void **state)
 	uint8 output[200];
 
     TCGS_PrepareInterfaceCommand(LEVEL0_DISCOVERY, NULL, &commandBlock, NULL);
-    TCGS_SetInterface(INTERFACE_VIRTUAL);
+    TCGS_SetInterfaceFunctions(&TCGS_Interface_Virtual_Funcs);
     status = TCGS_SendCommand(&commandBlock, NULL, &error, &output);
     assert_int_equal(error, INTERFACE_ERROR_GOOD);
     assert_int_equal(status, ERROR_SUCCESS);

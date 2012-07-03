@@ -8,29 +8,33 @@
 
 #include "tcgs_interface.h"
 #include "tcgs_interface_ata.h"
-#include "tcgs_interface_virtual.h"
 #include "tcgs_types.h"
 #include <string.h>
 
 static TCGS_Interface_t currentInterface;
-TCGS_IntefaceFunctions_t *TCGS_Inerface_Funcs;
+TCGS_IntefaceFunctions_t *TCGS_Interface_Funcs;
+
+void TCGS_SetInterfaceFunctions(TCGS_IntefaceFunctions_t *functs)
+{
+	TCGS_Interface_Funcs = functs;
+	currentInterface = INTERFACE_UNKNOWN;
+}
 
 void TCGS_SetInterface(TCGS_Interface_t interface)
 {
-	currentInterface = interface;
 	switch(interface)
 	{
 	case INTERFACE_SCSI:
 		break;
 	case INTERFACE_ATA:
-		TCGS_Inerface_Funcs = &TCGS_Inerface_ATA_Funcs;
+		TCGS_SetInterfaceFunctions(&TCGS_Interface_ATA_Funcs);
 		break;
 	case INTERFACE_NVM_EXPRESS:
 		break;
-	case INTERFACE_VIRTUAL:
-		TCGS_Inerface_Funcs = &TCGS_Inerface_Virtual_Funcs;
+	case INTERFACE_UNKNOWN:
 		break;
 	}
+	currentInterface = interface;
 }
 
 /*****************************************************************************
@@ -50,7 +54,7 @@ TCGS_TPerError_t TCGS_SendCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_TPerError_t *tperError, void *outputPayload)
 {
-	return (*TCGS_Inerface_Funcs->send)(inputCommandBlock, inputPayload, tperError, outputPayload);
+	return (*TCGS_Interface_Funcs->send)(inputCommandBlock, inputPayload, tperError, outputPayload);
 }
 
 #define MAX_INTERFACE_PARAMETER_LENGTH 32

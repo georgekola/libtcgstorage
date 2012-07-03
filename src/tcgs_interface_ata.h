@@ -10,7 +10,7 @@
 
 #include "tcgs_stream.h"
 
-extern TCGS_IntefaceFunctions_t TCGS_Inerface_ATA_Funcs;
+extern TCGS_IntefaceFunctions_t TCGS_Interface_ATA_Funcs;
 
 /*****************************************************************************
  * \brief Map command to ATA interface and send it to TPer. Return response and status.

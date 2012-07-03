@@ -46,7 +46,7 @@ typedef enum
 	INTERFACE_SCSI,
 	INTERFACE_ATA,
 	INTERFACE_NVM_EXPRESS,
-	INTERFACE_VIRTUAL,
+	INTERFACE_UNKNOWN,
 } TCGS_Interface_t;
 
 void TCGS_SetInterface(TCGS_Interface_t interface);
