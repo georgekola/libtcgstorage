@@ -12,7 +12,7 @@
 #include "vtper.h"
 
 
-TCGS_IntefaceFunctions_t TCGS_Interface_Virtual_Funcs =
+TCGS_InterfaceFunctions_t TCGS_Interface_Virtual_Funcs =
 {
 	(TCGS_SendCommand_t)&TCGS_Virtual_SendCommand,
 };
@@ -31,9 +31,9 @@ TCGS_IntefaceFunctions_t TCGS_Interface_Virtual_Funcs =
  * code and payload). Error code ERROR_INTERFACE is returned otherwise
  *
  *****************************************************************************/
-TCGS_TPerError_t TCGS_Virtual_SendCommand(
+TCGS_InterfaceError_t TCGS_Virtual_SendCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
-    TCGS_TPerError_t *tperError, void *outputPayload)
+    TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
 	return TCGS_VTPER_SendCommand(inputCommandBlock, inputPayload, tperError, outputPayload);
 }

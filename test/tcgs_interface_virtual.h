@@ -11,7 +11,7 @@
 #include "tcgs_stream.h"
 #include "tcgs_interface.h"
   
-extern TCGS_IntefaceFunctions_t TCGS_Interface_Virtual_Funcs;
+extern TCGS_InterfaceFunctions_t TCGS_Interface_Virtual_Funcs;
 
 /*****************************************************************************
  * \brief Map command to virtual TPer interface and send it to TPer. Return
@@ -27,9 +27,9 @@ extern TCGS_IntefaceFunctions_t TCGS_Interface_Virtual_Funcs;
  * (error status code and payload). Error code ERROR_INTERFACE is returned otherwise
  *
  *****************************************************************************/
-TCGS_TPerError_t TCGS_Virtual_SendCommand(
+TCGS_InterfaceError_t TCGS_Virtual_SendCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
-    TCGS_TPerError_t *tperError, void *outputPayload);
+    TCGS_InterfaceError_t *tperError, void *outputPayload);
 
 
 #endif //TCGS_INTERFACE_VIRTUAL_H

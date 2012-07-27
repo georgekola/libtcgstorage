@@ -21,6 +21,9 @@ typedef enum
 	ERROR_SUCCESS,
 	ERROR_BUILDER,
 	ERROR_INTERFACE
-} TCGS_Error_t; 
+} TCGS_Error_t;
+
+//minimal block size of the storage device
+#define TCGS_BLOCK_SIZE 512
 
 #endif //_TCGS_TYPES_H

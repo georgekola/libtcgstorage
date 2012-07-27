@@ -26,9 +26,21 @@ extern void mock_assert(const int result, const char* const expression,
 #include "libtcgstorage.h"
 #include "tcgs_stream.h"
 #include "tcgs_builder.h"
+#include "tcgs_parser.h"
 #include "tcgs_interface.h"
 #include "tcgs_interface_virtual.h"
+#include "tcgs_interface_encode.h"
 
+/**
+ * \brief Test base types size
+ */
+void test_tcgs_basetypes_size(void **state)
+{
+    assert_int_equal(sizeof(uint8), 1);
+    assert_int_equal(sizeof(uint16), 2);
+    assert_int_equal(sizeof(uint32), 4);
+    assert_int_equal(sizeof(uint64), 8);
+}
 /**
  * \brief Test for Level0Discovery command
  */
@@ -37,7 +49,7 @@ void test_tcgs_host_level0discovery(void **state)
 	TCGS_CommandBlock_t commandBlock;
 
 	TCGS_PrepareInterfaceCommand(LEVEL0_DISCOVERY, NULL, &commandBlock, NULL);
-	assert_int_equal(commandBlock.command,   IF_RECV);
+	assert_int_equal(commandBlock.command,    IF_RECV);
 	assert_int_equal(commandBlock.protocolId, 0x01);
 	assert_int_equal(commandBlock.length,     0x01);
 	assert_int_equal(commandBlock.comId,      0x01);
@@ -49,19 +61,31 @@ void test_tcgs_host_level0discovery(void **state)
 void test_tcgs_host_level0discovery_virtual(void **state)
 {
 	TCGS_CommandBlock_t commandBlock;
-	TCGS_TPerError_t error;
+	TCGS_InterfaceError_t error;
 	TCGS_Error_t status;
 	uint8 output[200];
+	TCGS_Level0Discovery_Header_t *header;
+	TCGS_Level0Discovery_FeatureTper_t *headerTper;
 
     TCGS_PrepareInterfaceCommand(LEVEL0_DISCOVERY, NULL, &commandBlock, NULL);
     TCGS_SetInterfaceFunctions(&TCGS_Interface_Virtual_Funcs);
     status = TCGS_SendCommand(&commandBlock, NULL, &error, &output);
     assert_int_equal(error, INTERFACE_ERROR_GOOD);
     assert_int_equal(status, ERROR_SUCCESS);
+    TCGS_DecodeLevel0Discovery(output);
+    header = TCGS_GetLevel0DiscoveryHeader(&output);
+    headerTper = TCGS_GetLevel0DiscoveryFeatureTperHeader(&output);
+    assert(header != NULL);
+    assert_int_equal(header->versionMajor, 0);
+    assert_int_equal(header->versionMinor, 1);
+    assert(headerTper != NULL);
+    assert_int_equal(headerTper->code, FEATURE_TPER);
+    assert_int_equal(headerTper->length, 12);
 }
 
 int main(int argc, char* argv[]) {
     const UnitTest tests[] = {
+        unit_test(test_tcgs_basetypes_size),
         unit_test(test_tcgs_host_level0discovery),
         unit_test(test_tcgs_host_level0discovery_virtual),
     };

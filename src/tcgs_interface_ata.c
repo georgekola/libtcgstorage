@@ -23,16 +23,16 @@
  * ERROR_INTERFACE is returned otherwise
  *
  *****************************************************************************/
-TCGS_TPerError_t TCGS_ATA_SendCommand(
+TCGS_InterfaceError_t TCGS_ATA_SendCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
-    TCGS_TPerError_t *tperError, void *outputPayload)
+    TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
 	*tperError = INTERFACE_ERROR_GOOD;
 	return ERROR_SUCCESS;
 }
 
 
-TCGS_IntefaceFunctions_t TCGS_Interface_ATA_Funcs =
+TCGS_InterfaceFunctions_t TCGS_Interface_ATA_Funcs =
 {
 	(TCGS_SendCommand_t)&TCGS_ATA_SendCommand,
 };

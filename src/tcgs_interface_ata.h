@@ -10,7 +10,7 @@
 
 #include "tcgs_stream.h"
 
-extern TCGS_IntefaceFunctions_t TCGS_Interface_ATA_Funcs;
+extern TCGS_InterfaceFunctions_t TCGS_Interface_ATA_Funcs;
 
 /*****************************************************************************
  * \brief Map command to ATA interface and send it to TPer. Return response and status.
@@ -25,9 +25,9 @@ extern TCGS_IntefaceFunctions_t TCGS_Interface_ATA_Funcs;
  * ERROR_INTERFACE is returned otherwise
  *
  *****************************************************************************/
-TCGS_TPerError_t TCGS_ATA_SendCommand(
+TCGS_InterfaceError_t TCGS_ATA_SendCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
-    TCGS_TPerError_t *tperError, void *outputPayload);
+    TCGS_InterfaceError_t *tperError, void *outputPayload);
 
 typedef enum
 {

@@ -12,9 +12,9 @@
 #include <string.h>
 
 static TCGS_Interface_t currentInterface;
-TCGS_IntefaceFunctions_t *TCGS_Interface_Funcs;
+TCGS_InterfaceFunctions_t *TCGS_Interface_Funcs;
 
-void TCGS_SetInterfaceFunctions(TCGS_IntefaceFunctions_t *functs)
+void TCGS_SetInterfaceFunctions(TCGS_InterfaceFunctions_t *functs)
 {
 	TCGS_Interface_Funcs = functs;
 	currentInterface = INTERFACE_UNKNOWN;
@@ -47,12 +47,12 @@ void TCGS_SetInterface(TCGS_Interface_t interface)
  *
  * \return ERROR_SUCCESS if interface command is successfully mapped to ATA transport
  * sent to TPer and the last returned response (error status code and payload). Error code
- * ERROR_INTERFACE is returned otherwise
+ * ERROR_INTERFACE is returned when
  *
  *****************************************************************************/
-TCGS_TPerError_t TCGS_SendCommand(
+TCGS_InterfaceError_t TCGS_SendCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
-    TCGS_TPerError_t *tperError, void *outputPayload)
+    TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
 	return (*TCGS_Interface_Funcs->send)(inputCommandBlock, inputPayload, tperError, outputPayload);
 }
