@@ -98,32 +98,3 @@ TCGS_Error_t TCGS_Level0Discovery(void)
     }
     return ERROR_SUCCESS;
 }
-
-/*****************************************************************************
- * \brief Return Level 0 Discovery header of previously read device data
- *
- * \par The function returns a pointer to internal buffer with Level 0 Discovery
- * header data.
- *
- * \par TCGS_Level0Discovery shall be called before.
- *
- * \return TCGS_Level0Discovery_Header_t* pointer to Level 0 Discovery header data
- *
- * \see TCGS_Level0Discovery
- *****************************************************************************/
-TCGS_Level0Discovery_Header_t *TCGS_GetLevel0Discovery(void);
-
-/*****************************************************************************
- * \brief Return Level 0 Discovery feature header with specified code
- *
- * \par The function returns a pointer to internal buffer with Level 0 Discovery
- * feature header data.
- *
- * \par TCGS_Level0Discovery shall be called before.
- *
- * \return void* pointer to Level 0 Discovery feature header data, NULL is returned
- * when feature with specified code is not included in response
- *
- * \see TCGS_Level0Discovery
- *****************************************************************************/
-void *TCGS_GetLevel0Discovery_Feature(uint16 code);

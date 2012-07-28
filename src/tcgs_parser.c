@@ -11,6 +11,18 @@
 #include "tcgs_parser.h"
 #include "tcgs_stream.h"
 
+/*****************************************************************************
+ * \brief Extracts Level 0 Discovery header out of command payload
+ *
+ * \par The function returns a pointer to internal buffer with Level 0 Discovery
+ * header data.
+ *
+ * \par TCGS_Level0Discovery shall be called before.
+ *
+ * \return [IN] TCGS_Level0Discovery_Header_t* pointer to Level 0 Discovery header data
+ *
+ * \see TCGS_Level0Discovery
+ *****************************************************************************/
 TCGS_Level0Discovery_Header_t* TCGS_GetLevel0DiscoveryHeader(void* payload)
 {
 	return (TCGS_Level0Discovery_Header_t*) payload;
@@ -54,6 +66,19 @@ TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryNextFeatureHeater(void* p
 	return NULL;
 }
 
+/*****************************************************************************
+ * \brief Return Level 0 Discovery feature header with specified code
+ *
+ * \par The function returns a pointer to internal buffer with Level 0 Discovery
+ * feature header data.
+ *
+ * \par TCGS_Level0Discovery shall be called before.
+ *
+ * \return void* pointer to Level 0 Discovery feature header data, NULL is returned
+ * when feature with specified code is not included in response
+ *
+ * \see TCGS_Level0Discovery
+ *****************************************************************************/
 void* TCGS_GetLevel0DiscoveryFeatureHeader(void* payload, TCGS_Level0Discovery_FeatureCode_t featureCode)
 {
 	void* iter;
