@@ -1,2 +1,9 @@
 set(CMAKE_C_FLAGS "")
-add_library (libtcgstorage libtcgstorage.c tcgs_builder.c tcgs_parser.c tcgs_interface_ata.c tcgs_interface.c tcgs_interface_encode.c)
+
+file(GLOB lib_srcs "*.c")
+source_group("Source" FILES ${lib_srcs})
+
+file(GLOB lib_hdrs "*.h")
+source_group("Include" FILES ${lib_hdrs})
+
+add_library (libtcgstorage ${lib_srcs})

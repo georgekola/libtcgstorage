@@ -2,8 +2,12 @@ set(CMAKE_C_FLAGS "-DUNIT_TESTING")
 
 include_directories (${LIBTCGSTORAGE_SOURCE_DIR}/src ${LIBTCGSTORAGE_SOURCE_DIR}/vtper)
 
-#link_directories (${LIBTCGSTORAGE_BINARY_DIR}/src) 
+file(GLOB test_srcs "*.c")
+source_group("Source" FILES ${test_srcs})
 
-add_executable (testmain testmain.c tcgs_interface_virtual.c) 
+file(GLOB lib_hdrs "*.h")
+source_group("Include" FILES ${test_hdrs})
+
+add_executable (testmain ${test_srcs})
 
 target_link_libraries (testmain libtcgstorage vtper libcmockery.a) 
