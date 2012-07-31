@@ -19,7 +19,9 @@
  *
  * \par TCGS_Level0Discovery shall be called before.
  *
- * \return [IN] TCGS_Level0Discovery_Header_t* pointer to Level 0 Discovery header data
+ * @param[in]  payload      Pointer to payload returned by TCGS_Level0Discovery
+ *
+ * \return TCGS_Level0Discovery_Header_t* pointer to Level 0 Discovery header data
  *
  * \see TCGS_Level0Discovery
  *****************************************************************************/
@@ -74,23 +76,22 @@ TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryNextFeatureHeater(void* p
  *
  * \par TCGS_Level0Discovery shall be called before.
  *
+ * @param[in]  payload      Pointer to payload returned by TCGS_Level0Discovery
+ *
  * \return void* pointer to Level 0 Discovery feature header data, NULL is returned
  * when feature with specified code is not included in response
  *
  * \see TCGS_Level0Discovery
  *****************************************************************************/
-void* TCGS_GetLevel0DiscoveryFeatureHeader(void* payload, TCGS_Level0Discovery_FeatureCode_t featureCode)
+TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryFeatureHeader(
+		void* payload, TCGS_Level0Discovery_FeatureCode_t featureCode)
 {
-	void* iter;
+	TCGS_Level0Discovery_Feature_t* iter;
 
-	//Note: Field length of Level0Discovery header indicates the total number of bytes that are valid in
-	//the Level 0 Discovery header and all of the feature descriptors returned, not including this field
-	for(
-			iter = payload + sizeof(TCGS_Level0Discovery_Header_t);
-			iter < payload + ((TCGS_Level0Discovery_Header_t*)payload)->length;
-			iter = ((uint8*)iter + ((TCGS_Level0Discovery_Feature_t*)iter)->length + sizeof(TCGS_Level0Discovery_Feature_t)))
+	iter = TCGS_GetLevel0DiscoveryFirstFeatureHeater(payload);
+	while (iter != NULL)
 	{
-		if (featureCode == ((TCGS_Level0Discovery_Feature_t*)iter)->code)
+		if (iter->code == featureCode)
 		{
 			return iter;
 		}
