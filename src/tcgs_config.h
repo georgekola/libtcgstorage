@@ -1,0 +1,16 @@
+/////////////////////////////////////////////////////////////////////////////
+/// tcgs_config.h
+///
+/// Common parameters for libtcgstorage
+///
+/// (c) Artem Zankovich, 2012
+/////////////////////////////////////////////////////////////////////////////
+
+#ifndef TCGS_CONFIG_H_
+#define TCGS_CONFIG_H_
+
+#include <stdbool.h>
+
+#define TCGS_VERBOSE TRUE
+
+#endif /* TCGS_CONFIG_H_ */

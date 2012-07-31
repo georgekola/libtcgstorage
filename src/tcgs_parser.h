@@ -19,7 +19,9 @@
  *
  * \par TCGS_Level0Discovery shall be called before.
  *
- * \return [IN] TCGS_Level0Discovery_Header_t* pointer to Level 0 Discovery header data
+ * @param[in]  payload      Pointer to payload returned by TCGS_Level0Discovery
+ *
+ * \return TCGS_Level0Discovery_Header_t* pointer to Level 0 Discovery header data
  *
  * \see TCGS_Level0Discovery
  *****************************************************************************/
@@ -37,12 +39,15 @@ TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryNextFeatureHeater(void* p
  *
  * \par TCGS_Level0Discovery shall be called before.
  *
+ * @param[in]  payload      Pointer to payload returned by TCGS_Level0Discovery
+ *
  * \return void* pointer to Level 0 Discovery feature header data, NULL is returned
  * when feature with specified code is not included in response
  *
  * \see TCGS_Level0Discovery
  *****************************************************************************/
-void* TCGS_GetLevel0DiscoveryFeatureHeader(void* payload, TCGS_Level0Discovery_FeatureCode_t featureCode);
+TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryFeatureHeader(
+		void* payload, TCGS_Level0Discovery_FeatureCode_t featureCode);
 
 #define TCGS_GetLevel0DiscoveryFeatureTperHeader(payload) ((TCGS_Level0Discovery_FeatureTper_t*)TCGS_GetLevel0DiscoveryFeatureHeader(payload, FEATURE_TPER))
 

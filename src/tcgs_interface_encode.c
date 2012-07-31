@@ -8,6 +8,7 @@
 
 #include <string.h>
 
+#include "tcgs_config.h"
 #include "tcgs_types.h"
 #include "tcgs_parser.h"
 #include "tcgs_interface_encode.h"
@@ -47,4 +48,7 @@ void TCGS_DecodeLevel0Discovery (uint8* data)
 		}
         iter = TCGS_GetLevel0DiscoveryNextFeatureHeater(data, iter);
 	}
+#if defined(TCGS_VERBOSE)
+	TCGS_PrintLevel0Discovery(data);
+#endif //defined(TCGS_VERBOSE)
 }
