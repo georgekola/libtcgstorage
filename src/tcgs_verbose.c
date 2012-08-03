@@ -13,18 +13,54 @@
 #include "tcgs_stream.h"
 #include "tcgs_parser.h"
 #include "tcgs_verbose.h"
+#include "tcgs_interface.h"
 
 #if defined(TCGS_VERBOSE)
+
+char* TCGS_VerboseCommand[IF_LAST] =
+{
+	"IF_SEND",
+	"IF_RECV",
+};
+
+
+/*****************************************************************************
+ * \brief Print content of interface command block
+ *
+ * @param[in]  command  Pointer to command block structure
+ *
+ * \return None
+ *****************************************************************************/
+void TCGS_PrintCommand(TCGS_CommandBlock_t* command)
+{
+	char commandBuf[sizeof(TCGS_VerboseCommand[0]) + 1];
+	if (command->command < IF_LAST)
+	{
+		sprintf(commandBuf, "%s", TCGS_VerboseCommand[command->command]);
+	}
+	else
+	{
+		sprintf(commandBuf, "%7d", command->command);
+	}
+	printf( "Command:       %s\n"
+			"Protocol ID:      %4d\n"
+			"Transfer Length:  %4d\n"
+			"ComID:          0x%4X\n",
+			commandBuf,
+			command->protocolId,
+			command->length,
+			command->comId);
+}
 
 void TCGS_PrintLevel0DiscoveryFeature(TCGS_Level0Discovery_Feature_t *feature)
 {
 	printf(TCGS_VERBOSE_BLOCK_SEPARATOR "\n");
-	printf( "Feature Code:       %3d\n",
-			//"Version:            %3d\n"
-			//"Length:             %3d\n",
-			feature->code);
-			//feature->version,
-			//feature->length);
+	printf( "Feature Code:       %3d\n"
+			"Version:            %3d\n"
+			"Length:             %3d\n",
+			feature->code,
+			feature->version,
+			feature->length);
 
 	switch(feature->code)
 	{

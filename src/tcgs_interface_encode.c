@@ -11,6 +11,7 @@
 #include "tcgs_config.h"
 #include "tcgs_types.h"
 #include "tcgs_parser.h"
+#include "tcgs_interface.h"
 #include "tcgs_interface_encode.h"
 
 

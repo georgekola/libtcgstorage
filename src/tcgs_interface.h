@@ -23,7 +23,8 @@ typedef enum
 typedef enum
 {
 	IF_SEND,
-	IF_RECV
+	IF_RECV,
+	IF_LAST,	//special value that stores number of values in this enum
 } TCGS_Command_t;
 
 /*
@@ -37,7 +38,7 @@ typedef struct
 {
 	TCGS_Command_t command;   		//Either IF-SEND or IF-RECV
 	uint8          protocolId;      //Between 0x01 and 0x06
-	uint32         length;          //The amount of data to be transferred
+	uint32         length;          //The amount of data to be transferred, in bytes
 	uint32         comId;           //The ComID to be used, for Protocol IDs 0x01, 0x02, 0x06
 } TCGS_CommandBlock_t;
 

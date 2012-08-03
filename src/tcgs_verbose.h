@@ -10,11 +10,21 @@
 #define TCGS_VERBOSE_H_
 
 #include "tcgs_config.h"
+#include "tcgs_interface.h"
 
 #if defined(TCGS_VERBOSE)
 
 #define TCGS_VERBOSE_COMMAND_SEPARATOR "======================================="
 #define TCGS_VERBOSE_BLOCK_SEPARATOR   "---------------------------------------"
+
+/*****************************************************************************
+ * \brief Print content of interface command block
+ *
+ * @param[in]  command  Pointer to command block structure
+ *
+ * \return None
+ *****************************************************************************/
+void TCGS_PrintCommand(TCGS_CommandBlock_t* command);
 
 /*****************************************************************************
  * \brief Print content of Level 0 Discovery

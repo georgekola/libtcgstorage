@@ -6,10 +6,17 @@
 /// (c) Artem Zankovich, 2012
 /////////////////////////////////////////////////////////////////////////////
 
+#include <string.h>
+#if TCGS_VERBOSE
+#include <stdio.h>
+#endif //TCGS_VERBOSE
+
+#include <stdio.h>
+
 #include "tcgs_interface.h"
 #include "tcgs_interface_ata.h"
 #include "tcgs_types.h"
-#include <string.h>
+#include "tcgs_verbose.h"
 
 static TCGS_Interface_t currentInterface;
 TCGS_InterfaceFunctions_t *TCGS_Interface_Funcs;
@@ -54,7 +61,16 @@ TCGS_InterfaceError_t TCGS_SendCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
-	return (*TCGS_Interface_Funcs->send)(inputCommandBlock, inputPayload, tperError, outputPayload);
+	TCGS_InterfaceError_t error;
+#if TCGS_VERBOSE
+	printf(TCGS_VERBOSE_COMMAND_SEPARATOR "\n");
+	TCGS_PrintCommand(inputCommandBlock);
+#endif //TCGS_VERBOSE
+	error = (*TCGS_Interface_Funcs->send)(inputCommandBlock, inputPayload, tperError, outputPayload);
+#if TCGS_VERBOSE
+	printf(TCGS_VERBOSE_COMMAND_SEPARATOR "\n");
+#endif //TCGS_VERBOSE
+	return error;
 }
 
 #define MAX_INTERFACE_PARAMETER_LENGTH 32
