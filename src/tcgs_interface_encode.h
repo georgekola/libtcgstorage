@@ -29,6 +29,6 @@
 	 ((((uint64)(x))>>40) & 0x000000000000FF00ULL)  | \
 	 ((((uint64)(x))>>56) & 0x00000000000000FFULL))
 
-void TCGS_DecodeLevel0Discovery();
+TCGS_Level0Discovery_Header_t* TCGS_DecodeLevel0Discovery();
 
 #endif //#TCGS_INTERFACE_ENCODE_H_

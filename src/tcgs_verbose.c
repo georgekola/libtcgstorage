@@ -169,10 +169,9 @@ void TCGS_PrintLevel0DiscoveryFeature(TCGS_Level0Discovery_Feature_t *feature)
  *
  * \see TCGS_Level0Discovery
  *****************************************************************************/
-void TCGS_PrintLevel0Discovery(void* payload)
+void TCGS_PrintLevel0Discovery(TCGS_Level0Discovery_Header_t* payload)
 {
 	TCGS_Level0Discovery_Feature_t* iter;
-#define header ((TCGS_Level0Discovery_Header_t*)payload)
 
 	printf("LEVEL 0 DISCOVERY\n");
 
@@ -183,11 +182,11 @@ void TCGS_PrintLevel0Discovery(void* payload)
 	//		header->versionMajor,
 	//		header->versionMinor);
 
-	iter = TCGS_GetLevel0DiscoveryFirstFeatureHeater(payload);
+	iter = TCGS_GetLevel0DiscoveryFirstFeatureHeader(payload);
 	while (iter != NULL)
 	{
 		TCGS_PrintLevel0DiscoveryFeature(iter);
-		iter = TCGS_GetLevel0DiscoveryNextFeatureHeater(payload, iter);
+		iter = TCGS_GetLevel0DiscoveryNextFeatureHeader(payload, iter);
 	}
 
 	return;

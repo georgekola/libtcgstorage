@@ -37,7 +37,7 @@ void TCGS_PrintCommand(TCGS_CommandBlock_t* command);
  *
  * \see TCGS_Level0Discovery
  *****************************************************************************/
-void TCGS_PrintLevel0Discovery(void* payload);
+void TCGS_PrintLevel0Discovery(TCGS_Level0Discovery_Header_t* payload);
 
 #endif //defined(TCGS_VERBOSE)
 

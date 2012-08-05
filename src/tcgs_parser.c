@@ -12,34 +12,30 @@
 #include "tcgs_stream.h"
 
 /*****************************************************************************
- * \brief Extracts Level 0 Discovery header out of command payload
+ * \brief Extracts the first Level 0 Discovery feature header from command
+ * payload
  *
- * \par The function returns a pointer to internal buffer with Level 0 Discovery
- * header data.
+ * \par The function returns a pointer to internal buffer with the first
+ * feature code from Level 0 Discovery command payload.
  *
  * \par TCGS_Level0Discovery shall be called before.
  *
  * @param[in]  payload      Pointer to payload returned by TCGS_Level0Discovery
  *
- * \return TCGS_Level0Discovery_Header_t* pointer to Level 0 Discovery header data
+ * \return TCGS_Level0Discovery_Feature_t* pointer to feature header
  *
  * \see TCGS_Level0Discovery
  *****************************************************************************/
-TCGS_Level0Discovery_Header_t* TCGS_GetLevel0DiscoveryHeader(void* payload)
+TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryFirstFeatureHeader(TCGS_Level0Discovery_Header_t* payload)
 {
-	return (TCGS_Level0Discovery_Header_t*) payload;
-}
-
-TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryFirstFeatureHeater(void* payload)
-{
-	uint32 payloadLength = ((TCGS_Level0Discovery_Header_t*)payload)->length;
+	uint32 payloadLength = payload->length;
 	uint32 prevFeaturesLength = sizeof(TCGS_Level0Discovery_Header_t);
 	TCGS_Level0Discovery_Feature_t *feature;
 
 	//if there is space in the payload after the main header
 	if (payloadLength > prevFeaturesLength)
 	{
-		feature = (TCGS_Level0Discovery_Feature_t*) (payload + prevFeaturesLength);
+		feature = (TCGS_Level0Discovery_Feature_t*) ((void*)payload + prevFeaturesLength);
 		//if feature suits payload
 		if (feature->length > 0 && (payloadLength >= prevFeaturesLength + feature->length))
 		{
@@ -49,10 +45,10 @@ TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryFirstFeatureHeater(void* 
 	return NULL;
 }
 
-TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryNextFeatureHeater(void* payload, TCGS_Level0Discovery_Feature_t* featureHeader)
+TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryNextFeatureHeader(TCGS_Level0Discovery_Header_t* payload, TCGS_Level0Discovery_Feature_t* featureHeader)
 {
-	uint32 payloadLength = ((TCGS_Level0Discovery_Header_t*)payload)->length;
-	uint32 prevFeaturesLength = ((uint32)((void*)featureHeader - payload) + featureHeader->length);
+	uint32 payloadLength = payload->length;
+	uint32 prevFeaturesLength = ((uint32)((void*)featureHeader - (void*)payload) + featureHeader->length);
 	TCGS_Level0Discovery_Feature_t *feature;
 
 	//if there is more space in the payload after the current feature header
@@ -77,18 +73,19 @@ TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryNextFeatureHeater(void* p
  * \par TCGS_Level0Discovery shall be called before.
  *
  * @param[in]  payload      Pointer to payload returned by TCGS_Level0Discovery
+ * @param[in]  featureCode  Code of the feature
  *
  * \return void* pointer to Level 0 Discovery feature header data, NULL is returned
  * when feature with specified code is not included in response
  *
- * \see TCGS_Level0Discovery
+ * \see TCGS_Level0Discovery, TCGS_Level0Discovery_FeatureCode_t
  *****************************************************************************/
 TCGS_Level0Discovery_Feature_t* TCGS_GetLevel0DiscoveryFeatureHeader(
-		void* payload, TCGS_Level0Discovery_FeatureCode_t featureCode)
+		TCGS_Level0Discovery_Header_t* payload, TCGS_Level0Discovery_FeatureCode_t featureCode)
 {
 	TCGS_Level0Discovery_Feature_t* iter;
 
-	iter = TCGS_GetLevel0DiscoveryFirstFeatureHeater(payload);
+	iter = TCGS_GetLevel0DiscoveryFirstFeatureHeader(payload);
 	while (iter != NULL)
 	{
 		if (iter->code == featureCode)

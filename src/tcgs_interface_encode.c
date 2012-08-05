@@ -16,19 +16,18 @@
 #include "tcgs_verbose.h"
 
 
-void TCGS_DecodeLevel0Discovery (uint8* data)
+TCGS_Level0Discovery_Header_t *TCGS_DecodeLevel0Discovery (void* data)
 {
-	TCGS_Level0Discovery_Header_t *header;
 	TCGS_Level0Discovery_Feature_t *iter;
+	#define header ((TCGS_Level0Discovery_Header_t*)data)
 
-	header = TCGS_GetLevel0DiscoveryHeader(data);
-	if (header != NULL)
+	if (data != NULL)
 	{
 		header->length = _swap32(header->length);
 		header->versionMajor = _swap16(header->versionMajor);
 		header->versionMinor = _swap16(header->versionMinor);
 	}
-    iter = TCGS_GetLevel0DiscoveryFirstFeatureHeater(data);
+    iter = TCGS_GetLevel0DiscoveryFirstFeatureHeader(header);
 	while (iter != NULL)
 	{
 		iter->code = _swap16(iter->code);
@@ -48,9 +47,10 @@ void TCGS_DecodeLevel0Discovery (uint8* data)
 			break;
 		//TODO: add decoding for other features
 		}
-        iter = TCGS_GetLevel0DiscoveryNextFeatureHeater(data, iter);
+        iter = TCGS_GetLevel0DiscoveryNextFeatureHeader(header, iter);
 	}
 #if defined(TCGS_VERBOSE)
-	TCGS_PrintLevel0Discovery(data);
+	TCGS_PrintLevel0Discovery(header);
 #endif //defined(TCGS_VERBOSE)
+	return header;
 }

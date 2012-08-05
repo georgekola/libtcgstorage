@@ -72,9 +72,8 @@ void test_tcgs_host_level0discovery_virtual(void **state)
     status = TCGS_SendCommand(&commandBlock, NULL, &error, &output);
     assert_int_equal(error, INTERFACE_ERROR_GOOD);
     assert_int_equal(status, ERROR_SUCCESS);
-    TCGS_DecodeLevel0Discovery(output);
-    header = TCGS_GetLevel0DiscoveryHeader(&output);
-    headerTper = TCGS_GetLevel0DiscoveryFeatureTperHeader(&output);
+    header = TCGS_DecodeLevel0Discovery(&output);
+    headerTper = TCGS_GetLevel0DiscoveryFeatureTperHeader(header);
     assert(header != NULL);
     assert_int_equal(header->versionMajor, 0);
     assert_int_equal(header->versionMinor, 1);
