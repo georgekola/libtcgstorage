@@ -17,11 +17,67 @@
 
 #if defined(TCGS_VERBOSE)
 
-char* TCGS_VerboseCommand[IF_LAST] =
+static const char * const commandVerboseMap[IF_LAST] =
 {
 	"IF_SEND",
 	"IF_RECV",
 };
+
+char* TCGS_Verbose_GetCommand (TCGS_Command_t command, char* commandBuf)
+{
+	if (command < IF_LAST)
+	{
+		sprintf(commandBuf, "%s", commandVerboseMap[command]);
+	}
+	else
+	{
+		sprintf(commandBuf, "%7d", command);
+	}
+
+	return commandBuf;
+}
+
+#define MAX_FEATURE_NAME_LENGTH sizeof("ENTERPRISE")
+typedef struct
+{
+	const TCGS_Level0Discovery_FeatureCode_t featureCode;
+	const char featureName[MAX_FEATURE_NAME_LENGTH];
+} featureVerboseMap_t;
+
+static const featureVerboseMap_t featureVerboseMap[] =
+{
+	{FEATURE_RESERVED,  "RESERVED"},
+	{FEATURE_TPER,      "TPER"},
+	{FEATURE_LOCKING,	"LOCKING"},
+	{FEATURE_GEOMETRY,	"GEOMETRY"},
+	{FEATURE_ENTERPRISE,"ENTERPRISE"},
+	{FEATURE_OPAL1,     "OPAL1"},
+	{FEATURE_OPAL2,		"OPAL2"},
+};
+
+const char * TCGS_Verbose_GetFeature (TCGS_Level0Discovery_FeatureCode_t featureCode, char* featureBuf)
+{
+	const char * result = NULL;
+	int i;
+
+	for (i = 0; i < sizeof(featureVerboseMap) / sizeof(featureVerboseMap[0]); i++)
+	{
+		if (featureVerboseMap[i].featureCode == featureCode)
+		{
+			result = featureVerboseMap[i].featureName;
+		}
+	}
+	if (result != NULL)
+	{
+		sprintf(featureBuf, "%*s", (int)MAX_FEATURE_NAME_LENGTH, result);
+	}
+	else
+	{
+		sprintf(featureBuf, "0x%X", featureCode);
+	}
+
+	return featureBuf;
+}
 
 
 /*****************************************************************************
@@ -33,20 +89,13 @@ char* TCGS_VerboseCommand[IF_LAST] =
  *****************************************************************************/
 void TCGS_PrintCommand(TCGS_CommandBlock_t* command)
 {
-	char commandBuf[sizeof(TCGS_VerboseCommand[0]) + 1];
-	if (command->command < IF_LAST)
-	{
-		sprintf(commandBuf, "%s", TCGS_VerboseCommand[command->command]);
-	}
-	else
-	{
-		sprintf(commandBuf, "%7d", command->command);
-	}
-	printf( "Command:       %s\n"
-			"Protocol ID:      %4d\n"
-			"Transfer Length:  %4d\n"
-			"ComID:          0x%4X\n",
-			commandBuf,
+	char commandBuf[sizeof(commandVerboseMap[0])];
+
+	printf( "Command:          %s\n"
+			"Protocol ID:         %4d\n"
+			"Transfer Length:     %4d\n"
+			"ComID:             0x%04X\n",
+			TCGS_Verbose_GetCommand(command->command, commandBuf),
 			command->protocolId,
 			command->length,
 			command->comId);
@@ -54,11 +103,13 @@ void TCGS_PrintCommand(TCGS_CommandBlock_t* command)
 
 void TCGS_PrintLevel0DiscoveryFeature(TCGS_Level0Discovery_Feature_t *feature)
 {
+	char featureBuf[MAX_FEATURE_NAME_LENGTH];
+
 	printf(TCGS_VERBOSE_BLOCK_SEPARATOR "\n");
-	printf( "Feature Code:       %3d\n"
-			"Version:            %3d\n"
-			"Length:             %3d\n",
-			feature->code,
+	printf( "Feature Code: %*s\n"
+			"Version:              %3d\n"
+			"Length:               %3d\n",
+			(int)MAX_FEATURE_NAME_LENGTH, TCGS_Verbose_GetFeature(feature->code, featureBuf),
 			feature->version,
 			feature->length);
 
@@ -66,12 +117,12 @@ void TCGS_PrintLevel0DiscoveryFeature(TCGS_Level0Discovery_Feature_t *feature)
 	{
 	case FEATURE_TPER:
 		#define featureTPer ((TCGS_Level0Discovery_FeatureTper_t*)(void*)feature)
-		printf( "Sync Supported:       %d\n"
-				"Async Supported:      %d\n"
-				"ACK/NAK Supported:    %d\n"
-				"Buf Mgmt Supported:   %d\n"
-				"Streaming Supported:  %d\n"
-				"ComID Mgmt Supported: %d\n",
+		printf( "Sync Supported:         %d\n"
+				"Async Supported:        %d\n"
+				"ACK/NAK Supported:      %d\n"
+				"Buf Mgmt Supported:     %d\n"
+				"Streaming Supported:    %d\n"
+				"ComID Mgmt Supported:   %d\n",
 				featureTPer->syncSupported,
 				featureTPer->asyncSupported,
 				featureTPer->ackSupported,
@@ -82,12 +133,12 @@ void TCGS_PrintLevel0DiscoveryFeature(TCGS_Level0Discovery_Feature_t *feature)
 	case FEATURE_LOCKING:
 		#define featureLocking ((TCGS_Level0Discovery_FeatureLocking_t*)(void*)feature)
 		printf(
-			"Locking Supported:    %d\n"
-			"Locking Enabled:      %d\n"
-			"Locked:               %d\n"
-			"Media Encr. Locked:   %d\n"
-			"MBR Enabled:          %d\n"
-			"MBR Done:             %d\n",
+			"Locking Supported:      %d\n"
+			"Locking Enabled:        %d\n"
+			"Locked:                 %d\n"
+			"Media Encr. Locked:     %d\n"
+			"MBR Enabled:            %d\n"
+			"MBR Done:               %d\n",
 			featureLocking->lockingSupport,
 			featureLocking->lockingEnabled,
 			featureLocking->locked,
@@ -98,9 +149,9 @@ void TCGS_PrintLevel0DiscoveryFeature(TCGS_Level0Discovery_Feature_t *feature)
 	case FEATURE_OPAL1:
 		#define featureOpal1 ((TCGS_Level0Discovery_FeatureOpal1_t*)(void*)feature)
 		printf(
-			"Base ComID:      0x%04X\n"
-			"Number of ComIDs:   %3d\n"
-			"Range crossing:     %3d\n",
+			"Base ComID:        0x%04X\n"
+			"Number of ComIDs:     %3d\n"
+			"Range crossing:       %3d\n",
 			featureOpal1->baseComID,
 			featureOpal1->numberOfComIDs,
 			featureOpal1->rangeCrossing);
