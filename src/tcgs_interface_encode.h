@@ -9,7 +9,7 @@
 #ifndef TCGS_INTERFACE_ENCODE_H_
 #define TCGS_INTERFACE_ENCODE_H_
 
-#include "TCGS_types.h"
+#include "tcgs_types.h"
 
 #define _swap16(x) (((((uint16)((x) & 0xFF00)) >> 8)) | ((uint16)(((x) & 0x00FF) << 8)))
 

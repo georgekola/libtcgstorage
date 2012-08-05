@@ -13,6 +13,7 @@
 #include "tcgs_parser.h"
 #include "tcgs_interface.h"
 #include "tcgs_interface_encode.h"
+#include "tcgs_verbose.h"
 
 
 void TCGS_DecodeLevel0Discovery (uint8* data)
