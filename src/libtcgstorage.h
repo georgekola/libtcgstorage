@@ -3,7 +3,8 @@
 ///
 /// the main include file of the library
 /// contains external API of TCG Storage Host
-/// (c) Artem Zankovich
+///
+/// (c) Artem Zankovich, 2012
 //////////////////////////////////////////////////////////////////////////////
 #ifndef _LIBTCGSTORAGE_H
 #define _LIBTCGSTORAGE_H  

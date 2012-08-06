@@ -3,7 +3,7 @@
 ///
 /// Builder for IF-SEND and IF-RECV commands   
 ///
-/// (c) Artem Zankovich
+/// (c) Artem Zankovich, 2012
 //////////////////////////////////////////////////////////////////////////////
 
 #include "tcgs_builder.h"

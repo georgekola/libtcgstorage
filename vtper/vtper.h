@@ -3,8 +3,9 @@
 ///
 /// implementation of virtual tper
 ///
-/// (c) Artem Zankovich
+/// (c) Artem Zankovich, 2012
 //////////////////////////////////////////////////////////////////////////////
+
 #ifndef _TCGS_VTPER_H
 #define _TCGS_VTPER_H
 
