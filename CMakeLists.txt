@@ -9,4 +9,4 @@ add_subdirectory (src)
 add_subdirectory (test)
 add_subdirectory (vtper)
 
-TARGET_LINK_LIBRARIES(libtcgstorage)
+#TARGET_LINK_LIBRARIES(libtcgstorage)

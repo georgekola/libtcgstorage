@@ -10,4 +10,4 @@ source_group("Include" FILES ${test_hdrs})
 
 add_executable (testmain ${test_srcs})
 
-target_link_libraries (testmain libtcgstorage vtper libcmockery.a) 
+target_link_libraries (testmain tcgstorage vtper libcmockery.a) 

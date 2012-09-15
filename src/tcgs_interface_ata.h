@@ -11,7 +11,7 @@
 
 #include "tcgs_stream.h"
 
-extern TCGS_InterfaceFunctions_t TCGS_Interface_ATA_Funcs;
+extern TCGS_InterfaceDescriptor_t TCGS_Interface_ATA_Funcs;
 
 /*****************************************************************************
  * \brief Map command to ATA interface and send it to TPer. Return response and status.

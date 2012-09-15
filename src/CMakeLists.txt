@@ -6,4 +6,4 @@ source_group("Source" FILES ${lib_srcs})
 file(GLOB lib_hdrs "*.h")
 source_group("Include" FILES ${lib_hdrs})
 
-add_library (libtcgstorage ${lib_srcs})
+add_library (tcgstorage ${lib_srcs})

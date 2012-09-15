@@ -18,31 +18,19 @@
 #include "tcgs_types.h"
 #include "tcgs_verbose.h"
 
-static TCGS_Interface_t currentInterface;
-TCGS_InterfaceFunctions_t *TCGS_Interface_Funcs;
+/// Current interface descriptor
+static TCGS_InterfaceDescriptor_t *TCGS_Interface_Desc = NULL;
 
-void TCGS_SetInterfaceFunctions(TCGS_InterfaceFunctions_t *functs)
+void TCGS_SetInterfaceFunctions(TCGS_InterfaceDescriptor_t *descriptor)
 {
-	TCGS_Interface_Funcs = functs;
-	currentInterface = INTERFACE_UNKNOWN;
+	TCGS_Interface_Desc = descriptor;
 }
 
-void TCGS_SetInterface(TCGS_Interface_t interface)
+TCGS_InterfaceDescriptor_t* TCGS_GetInterface(void)
 {
-	switch(interface)
-	{
-	case INTERFACE_SCSI:
-		break;
-	case INTERFACE_ATA:
-		TCGS_SetInterfaceFunctions(&TCGS_Interface_ATA_Funcs);
-		break;
-	case INTERFACE_NVM_EXPRESS:
-		break;
-	case INTERFACE_UNKNOWN:
-		break;
-	}
-	currentInterface = interface;
+	return TCGS_Interface_Desc;
 }
+
 
 /*****************************************************************************
  * \brief Map command to ATA interface and send it to TPer. Return response and status.
@@ -66,7 +54,7 @@ TCGS_InterfaceError_t TCGS_SendCommand(
 	printf(TCGS_VERBOSE_COMMAND_SEPARATOR "\n");
 	TCGS_PrintCommand(inputCommandBlock);
 #endif //TCGS_VERBOSE
-	error = (*TCGS_Interface_Funcs->send)(inputCommandBlock, inputPayload, tperError, outputPayload);
+	error = (*TCGS_Interface_Desc->send)(inputCommandBlock, inputPayload, tperError, outputPayload);
 #if TCGS_VERBOSE
 	printf(TCGS_VERBOSE_COMMAND_SEPARATOR "\n");
 #endif //TCGS_VERBOSE

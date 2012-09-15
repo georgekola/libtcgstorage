@@ -12,7 +12,7 @@
 #include "tcgs_stream.h"
 #include "tcgs_interface.h"
   
-extern TCGS_InterfaceFunctions_t TCGS_Interface_Virtual_Funcs;
+extern TCGS_InterfaceDescriptor_t TCGS_VTper_InterfaceDescriptor;
 
 /*****************************************************************************
  * \brief Map command to virtual TPer interface and send it to TPer. Return

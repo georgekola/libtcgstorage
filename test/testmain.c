@@ -68,7 +68,7 @@ void test_tcgs_host_level0discovery_virtual(void **state)
 	TCGS_Level0Discovery_FeatureTper_t *headerTper;
 
     TCGS_PrepareInterfaceCommand(LEVEL0_DISCOVERY, NULL, &commandBlock, NULL);
-    TCGS_SetInterfaceFunctions(&TCGS_Interface_Virtual_Funcs);
+    TCGS_SetInterfaceFunctions(&TCGS_VTper_InterfaceDescriptor);
     status = TCGS_SendCommand(&commandBlock, NULL, &error, &output);
     assert_int_equal(error, INTERFACE_ERROR_GOOD);
     assert_int_equal(status, ERROR_SUCCESS);

@@ -56,25 +56,24 @@ typedef enum
 	INTERFACE_SCSI,
 	INTERFACE_ATA,
 	INTERFACE_NVM_EXPRESS,
+	INTERFACE_VTPER
 } TCGS_Interface_t;
 
 /*****************************************************************************
- * \brief Switches set of interface functions
- *
- * @param[in]  interface              interface type
- *
- * \return None
- *
+ * \brief Set of functions that constitutes transport interface
  *****************************************************************************/
-void TCGS_SetInterface(TCGS_Interface_t interface);
+typedef void (*TCGS_InitCommand_t) (void);
 
-typedef TCGS_InterfaceError_t (*TCGS_SendCommand_t) (
-	    TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
-	    TCGS_InterfaceError_t *interfaceError, void *outputPayload);
+typedef TCGS_InterfaceError_t (*TCGS_SendCommand_t)
+	(TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
+	 TCGS_InterfaceError_t *interfaceError, void *outputPayload);
 
+typedef void	(*TCGS_SetInterfaceParameterCommand_t)	(char *name, uint32 value);
+
+typedef uint32	(*TCGS_GetInterfaceParameterCommand_t)	(char *name);
 
 /*****************************************************************************
- * \brief Current set of pointer to interface functions
+ * \brief Interface descriptor
  *
  * This structure contains pointers to transport-specific implementation of
  * transport functions. Don't use it directly, use TSGS_SetInterface function
@@ -85,11 +84,30 @@ typedef TCGS_InterfaceError_t (*TCGS_SendCommand_t) (
  *****************************************************************************/
 typedef struct
 {
-	//TCGS_InitCommand_t *init
-	TCGS_SendCommand_t send;
-} TCGS_InterfaceFunctions_t;
+	TCGS_Interface_t	type;
+	TCGS_InitCommand_t	init;
+	TCGS_SendCommand_t	send;
+	TCGS_SetInterfaceParameterCommand_t setParameter;
+	TCGS_GetInterfaceParameterCommand_t getParameter;
+} TCGS_InterfaceDescriptor_t;
 
-void TCGS_SetInterfaceFunctions(TCGS_InterfaceFunctions_t *functs);
+/*****************************************************************************
+ * \brief Set new transport interface descriptor
+ *
+ * @param[in]  functions              interface descriptor
+ *
+ * \return None
+ *
+ *****************************************************************************/
+void TCGS_SetInterface(TCGS_InterfaceDescriptor_t *descriptor);
+
+/*****************************************************************************
+ * \brief Get current interface descriptor
+ *
+ * \return interface descriptor
+ *
+ *****************************************************************************/
+TCGS_InterfaceDescriptor_t* TCGS_GetInterface(void);
 
 /*****************************************************************************
  * \brief Map command to current interface and send it to TPer. Return response and status.

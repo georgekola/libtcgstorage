@@ -12,14 +12,14 @@
 #include "vtper.h"
 
 
-TCGS_InterfaceFunctions_t TCGS_Interface_Virtual_Funcs =
+static void TCGS_VTper_Init(void)
 {
-	(TCGS_SendCommand_t)&TCGS_Virtual_SendCommand,
-};
-
+	return;
+}
 
 /*****************************************************************************
- * \brief Map command to virtual TPer interface and send it to TPer. Return response and status
+ * \brief Map command to virtual TPer interface and send it to TPer.
+ *        Return command response buffer and interface status
  *
  * @param[in]  inputCommandBlock      input command block
  * @param[in]  inputPayload           input payload. NULL if command has no data
@@ -31,9 +31,28 @@ TCGS_InterfaceFunctions_t TCGS_Interface_Virtual_Funcs =
  * code and payload). Error code ERROR_INTERFACE is returned otherwise
  *
  *****************************************************************************/
-TCGS_InterfaceError_t TCGS_Virtual_SendCommand(
+static TCGS_InterfaceError_t TCGS_VTper_Send(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
 	return TCGS_VTPER_SendCommand(inputCommandBlock, inputPayload, tperError, outputPayload);
 }
+
+static void TCGS_VTper_SetParameter(char *name, uint32 value)
+{
+	return;
+}
+
+static uint32 TCGS_VTper_GetParameter(char *name)
+{
+	return 0;
+}
+
+TCGS_InterfaceDescriptor_t TCGS_VTper_InterfaceDescriptor =
+{
+	INTERFACE_VTPER,
+	(TCGS_InitCommand_t)&TCGS_VTper_Init,
+	(TCGS_SendCommand_t)&TCGS_VTper_Send,
+	(TCGS_SetInterfaceParameterCommand_t)&TCGS_VTper_SetParameter,
+	(TCGS_GetInterfaceParameterCommand_t)&TCGS_VTper_GetParameter
+};
