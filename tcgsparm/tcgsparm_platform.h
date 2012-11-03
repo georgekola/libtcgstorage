@@ -1,0 +1,14 @@
+/////////////////////////////////////////////////////////////////////////////
+/// tcgsparm_platform.h
+///
+/// API to platform-specific routines for tcgparm utility
+///
+/// (c) Artem Zankovich, 2012
+//////////////////////////////////////////////////////////////////////////////
+#ifndef _TCGSPARM_PLATFORM_H
+#define _TCGSPARM_PLATFORM_H  
+
+void listDevicesAta(void);
+
+#endif //_TCGSPARM_PLATFORM_H
+

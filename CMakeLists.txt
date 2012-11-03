@@ -8,5 +8,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${LIBTCGSTORAGE_BINARY_DIR}/bin)
 add_subdirectory (src) 
 add_subdirectory (test)
 add_subdirectory (vtper)
+add_subdirectory (tcgsparm)
 
 #TARGET_LINK_LIBRARIES(libtcgstorage)
