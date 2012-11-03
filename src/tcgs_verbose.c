@@ -157,6 +157,34 @@ void TCGS_PrintLevel0DiscoveryFeature(TCGS_Level0Discovery_Feature_t *feature)
 			featureOpal1->numberOfComIDs,
 			featureOpal1->rangeCrossing);
 		break;
+	case FEATURE_OPAL2:
+		#define featureOpal2 ((TCGS_Level0Discovery_FeatureOpal2_t*)(void*)feature)
+		printf(
+			"Base ComID:        0x%04X\n"
+			"Number of ComIDs:     %3d\n"
+			"Range crossing:       %3d\n"
+			"Num. of Admins:       %3d\n"
+			"Num. of Users:        %3d\n"
+			"InitialPinSidIndic.:  %3d\n"
+			"BehaviorPinSinRevert: %3d\n",
+			featureOpal2->baseComID,
+			featureOpal2->numberOfComIDs,
+			featureOpal2->rangeCrossing,
+			featureOpal2->numberOfAdminsSupported,
+			featureOpal2->numberOfUsersSupported,
+			featureOpal2->initialPinSidIndicator,
+			featureOpal2->behaviorPinSinRevert);
+		break;
+	case FEATURE_ENTERPRISE:
+		#define featureEnterprise ((TCGS_Level0Discovery_FeatureEnterprise_t*)(void*)feature)
+		printf(
+			"Base ComID:        0x%04X\n"
+			"Number of ComIDs:     %3d\n"
+			"Range crossing:       %3d\n",
+			featureEnterprise->baseComID,
+			featureEnterprise->numberOfComIDs,
+			featureEnterprise->rangeCrossing);
+		break;
 	default:
 		//do nothing
 		break;

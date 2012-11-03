@@ -37,19 +37,19 @@ typedef struct {
     uint16		versionMinor;
     uint8		reserved[8];
     uint8		vendor[32];
-} TCGS_Level0Discovery_Header_t;
+} __attribute__((packed)) TCGS_Level0Discovery_Header_t;
 
 typedef struct {	   
     uint16 		code;
-    uint8		version		:4;
-    uint8		reserved	:4;
+    uint8		reserved					:4;
+    uint8		version						:4;
     uint8		length;
-} TCGS_Level0Discovery_Feature_t;
+} __attribute__((packed)) TCGS_Level0Discovery_Feature_t;
 
 typedef struct {
     uint16 		code;
-    uint8		version		:4;
-    uint8		reserved	:4;
+    uint8		reserved					:4;
+    uint8		version						:4;
     uint8		length;
 
     uint8		syncSupported				:1;
@@ -62,12 +62,12 @@ typedef struct {
     uint8		reserved2					:1;
 
     uint8		reserved3[11];
-} TCGS_Level0Discovery_FeatureTper_t;
+} __attribute__((packed)) TCGS_Level0Discovery_FeatureTper_t;
 
 typedef struct {
     uint16 		code;
-    uint8		version		                :4;
-    uint8		reserved	                :4;
+    uint8		reserved					:4;
+    uint8		version						:4;
     uint8		length;
 
     uint8		lockingSupport				:1;
@@ -79,25 +79,25 @@ typedef struct {
     uint8		reserved1                   :2;
 
     uint8		reserved2[11];
-} TCGS_Level0Discovery_FeatureLocking_t;
+} __attribute__((packed)) TCGS_Level0Discovery_FeatureLocking_t;
 
 typedef struct {
     uint16 		code;
-    uint8		version		                :4;
     uint8		reserved	                :4;
+    uint8		version						:4;
     uint8		length;
+
     uint8		reserved1;
     uint8		reserved2[7];
     uint32		LogicalBlockSize;
     uint64		AlignmentGranularity;
     uint64		LowestAlignedLBA;
-} TCGS_Level0Discovery_FeatureGeometry_t;
-
+} __attribute__((packed)) TCGS_Level0Discovery_FeatureGeometry_t;
 
 typedef struct {
     uint16 		code;
-    uint8		version		                :4;
-    uint8		reserved	                :4;
+    uint8		reserved					:4;
+    uint8		version						:4;
     uint8		length;
 
     uint16  	baseComID;
@@ -107,12 +107,12 @@ typedef struct {
     uint8 		rangeCrossing				:1;
 
     uint8		reserved2[10];
-} TCGS_Level0Discovery_FeatureOpal1_t;
+} __attribute__((packed)) TCGS_Level0Discovery_FeatureOpal1_t;
 
 typedef struct {
     uint16 		code;
-    uint8		version		                :4;
-    uint8		reserved	                :4;
+    uint8		reserved					:4;
+    uint8		version						:4;
     uint8		length;
 
     uint16  	baseComID;
@@ -124,10 +124,24 @@ typedef struct {
     uint8		initialPinSidIndicator;
     uint8		behaviorPinSinRevert;
     uint8		reserved2[5];
-} TCGS_Level0Discovery_FeatureOpal2_t;
+} __attribute__((packed)) TCGS_Level0Discovery_FeatureOpal2_t;
 
 //TODO: define structure according to Enterprise specification
 typedef struct {
-} TCGS_Level0Discovery_FeatureEnterprise_t;
+    uint16 		code;
+    uint8		reserved					:4;
+    uint8		version						:4;
+    uint8		length;
+
+    uint16  	baseComID;
+    uint16  	numberOfComIDs;
+    uint8		reserved1					:7;
+    uint8 		rangeCrossing				:1;
+    uint16		numberOfAdminsSupported;
+    uint16		numberOfUsersSupported;
+    uint8		initialPinSidIndicator;
+    uint8		behaviorPinSinRevert;
+    uint8		reserved2[5];
+} __attribute__((packed)) TCGS_Level0Discovery_FeatureEnterprise_t;
 
 #endif //_TCGS_STREAM_H  
