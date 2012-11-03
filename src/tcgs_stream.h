@@ -102,10 +102,8 @@ typedef struct {
 
     uint16  	baseComID;
     uint16  	numberOfComIDs;
-
-    uint8		reserved1					:7;
     uint8 		rangeCrossing				:1;
-
+    uint8		reserved1					:7;
     uint8		reserved2[10];
 } __attribute__((packed)) TCGS_Level0Discovery_FeatureOpal1_t;
 
@@ -117,8 +115,8 @@ typedef struct {
 
     uint16  	baseComID;
     uint16  	numberOfComIDs;
-    uint8		reserved1					:7;
     uint8 		rangeCrossing				:1;
+	uint8		reserved1					:7;
     uint16		numberOfAdminsSupported;
     uint16		numberOfUsersSupported;
     uint8		initialPinSidIndicator;
@@ -126,7 +124,6 @@ typedef struct {
     uint8		reserved2[5];
 } __attribute__((packed)) TCGS_Level0Discovery_FeatureOpal2_t;
 
-//TODO: define structure according to Enterprise specification
 typedef struct {
     uint16 		code;
     uint8		reserved					:4;
@@ -135,13 +132,9 @@ typedef struct {
 
     uint16  	baseComID;
     uint16  	numberOfComIDs;
-    uint8		reserved1					:7;
     uint8 		rangeCrossing				:1;
-    uint16		numberOfAdminsSupported;
-    uint16		numberOfUsersSupported;
-    uint8		initialPinSidIndicator;
-    uint8		behaviorPinSinRevert;
-    uint8		reserved2[5];
+	uint8		reserved1					:7;
+    uint8		reserved2[7];
 } __attribute__((packed)) TCGS_Level0Discovery_FeatureEnterprise_t;
 
 #endif //_TCGS_STREAM_H  
