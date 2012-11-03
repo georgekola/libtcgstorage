@@ -10,6 +10,7 @@
 #define TCGS_VERBOSE_H_
 
 #include "tcgs_config.h"
+#include "tcgs_stream.h"
 #include "tcgs_interface.h"
 
 #if defined(TCGS_VERBOSE)

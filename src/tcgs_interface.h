@@ -10,6 +10,7 @@
 #define _TCGS_INTERFACE_H
 
 #include "tcgs_types.h"
+#include "tcgs_config.h"
 
 typedef enum
 {
@@ -53,24 +54,58 @@ typedef struct
 typedef enum
 {
 	INTERFACE_UNKNOWN,
+#if defined(TCGS_INTERFACE_SCSI_SUPPORTED)
 	INTERFACE_SCSI,
+#endif //TCGS_INTERFACE_SCSI_SUPPORTED
+#if defined(TCGS_INTERFACE_ATA_SUPPORTED)
 	INTERFACE_ATA,
+#endif //TCGS_INTERFACE_ATA_SUPPORTED
+#if defined(TCGS_INTERFACE_NVM_EXPRESS_SUPPORTED)
 	INTERFACE_NVM_EXPRESS,
+#endif //TCGS_INTEFACE_VTPER_SUPPORTED
+#if defined(TCGS_INTERFACE_VTPER_SUPPORTED)
 	INTERFACE_VTPER
+#endif //TCGS_INTEFACE_VTPER_SUPPORTED
 } TCGS_Interface_t;
+
+//structure contains association of interace type code with its printable name
+typedef struct {
+    TCGS_Interface_t type;
+    char*            name;
+} TCGS_InterfaceName_t;
+
+/*****************************************************************************
+ * \brief array of supported interfaces (type code + printable name). The last
+ * element SHALL always be of type INTERFACE_UNKNOWN 
+ */
+extern TCGS_InterfaceName_t TCGS_InterfaceNames[];
+
+/*****************************************************************************
+ * \brief Get internal interface code by printable interface name
+ *
+ * @param[in]  name     printable interface name
+ *
+ * \return internal interface code
+ *
+ * \see TCGS_InterfaceNames
+ *
+ *****************************************************************************/
+TCGS_Interface_t TCGS_Interface_GetCode(char *name);
 
 /*****************************************************************************
  * \brief Set of functions that constitutes transport interface
  *****************************************************************************/
-typedef void (*TCGS_InitCommand_t) (void);
+typedef TCGS_Error_t (*TCGS_OpenCommand_t) (char *device);
 
-typedef TCGS_InterfaceError_t (*TCGS_SendCommand_t)
+typedef TCGS_InterfaceError_t (*TCGS_IoCommand_t)
 	(TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
 	 TCGS_InterfaceError_t *interfaceError, void *outputPayload);
 
-typedef void	(*TCGS_SetInterfaceParameterCommand_t)	(char *name, uint32 value);
+typedef void	(*TCGS_SetParameterCommand_t)	(char *name, uint32 value);
 
-typedef uint32	(*TCGS_GetInterfaceParameterCommand_t)	(char *name);
+typedef uint32	(*TCGS_GetParameterCommand_t)	(char *name);
+
+typedef TCGS_Error_t (*TCGS_UpdateDeviceParameters) (void);
 
 /*****************************************************************************
  * \brief Interface descriptor
@@ -85,11 +120,63 @@ typedef uint32	(*TCGS_GetInterfaceParameterCommand_t)	(char *name);
 typedef struct
 {
 	TCGS_Interface_t	type;
-	TCGS_InitCommand_t	init;
-	TCGS_SendCommand_t	send;
-	TCGS_SetInterfaceParameterCommand_t setParameter;
-	TCGS_GetInterfaceParameterCommand_t getParameter;
+	TCGS_OpenCommand_t	open;
+	TCGS_IoCommand_t	send;
+	TCGS_SetParameterCommand_t setParameter;
+	TCGS_GetParameterCommand_t getParameter;
+    TCGS_UpdateDeviceParameters updateDeviceParameters;
 } TCGS_InterfaceDescriptor_t;
+
+
+/*****************************************************************************
+ * Structures and functions to work with interface parameters. There are two
+ * types of interface parameters -- configurations and device properties. 
+ * First are used to configure work with interface (i.e. PIO or DMA mode
+ * of trusted commands for ATA interface). Second reflect properties of device
+ * received with device informational command (i.e. IDENTIFY DEVICE for ATA 
+ * interface)
+ *
+ * \see TCGS_IntefaceParameters_t, 
+ *****************************************************************************/
+
+#define MAX_INTERFACE_PARAMETER_NAME_LENGTH 32
+
+/*****************************************************************************
+ * Single interface parameter. It is identified by name and contains some
+ * value
+ *
+ * There are two types of interface parameters -- configurations and device
+ * properties. First are used to configure work with interface (i.e. PIO or
+ * DMA mode of ATA trusted commands for ATA interface). Second reflect
+ * properties of device received with device informational command (i.e.
+ * IDENTIFY DEVICE for ATA interface)
+ *
+ * \see TCGS_IntefaceParameters_t
+ */
+typedef struct
+{
+	char                            name[MAX_INTERFACE_PARAMETER_NAME_LENGTH + 1];
+	uint32                          value;
+} TCGS_IntefaceParameter_t;
+
+
+/*****************************************************************************
+ * List of parameters for concrete interface. 
+ * 
+ * Every interface defines and maintains its list of parameters. It initializes
+ * configurations and device properties in interface function `init`. Device
+ * properties may be updated then by call of interface function
+ * `updateDeviceProperties`
+ * 
+ *
+ * \see TCGS_InterfaceDescriptor_t, TCGS_IntefaceParameter_t
+ */
+typedef struct
+{
+	unsigned length;
+	TCGS_IntefaceParameter_t *param;
+} TCGS_IntefaceParameters_t;
+
 
 /*****************************************************************************
  * \brief Set new transport interface descriptor
@@ -99,7 +186,7 @@ typedef struct
  * \return None
  *
  *****************************************************************************/
-void TCGS_SetInterface(TCGS_InterfaceDescriptor_t *descriptor);
+void TCGS_Interface_SetDescriptor(TCGS_InterfaceDescriptor_t *descriptor);
 
 /*****************************************************************************
  * \brief Get current interface descriptor
@@ -107,10 +194,22 @@ void TCGS_SetInterface(TCGS_InterfaceDescriptor_t *descriptor);
  * \return interface descriptor
  *
  *****************************************************************************/
-TCGS_InterfaceDescriptor_t* TCGS_GetInterface(void);
+TCGS_InterfaceDescriptor_t* TCGS_Interface_GetDescriptor(void);
 
 /*****************************************************************************
- * \brief Map command to current interface and send it to TPer. Return response and status.
+ * \brief Open device using current interface descriptor
+ *
+ * @param[in]  device                 device name
+ *
+ * \return error code
+ *
+ *****************************************************************************/
+TCGS_Error_t TCGS_Interface_OpenDevice(char *device);
+
+
+/*****************************************************************************
+ * \brief Map command to current interface and send it to TPer. Return response (if provided)
+ * and status.
  *
  * @param[in]  inputCommandBlock      input command block
  * @param[in]  inputPayload           input payload. NULL if command has no data
@@ -122,7 +221,7 @@ TCGS_InterfaceDescriptor_t* TCGS_GetInterface(void);
  * ERROR_INTERFACE is returned otherwise
  *
  *****************************************************************************/
-TCGS_InterfaceError_t TCGS_SendCommand(
+TCGS_InterfaceError_t TCGS_Interface_IoCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_InterfaceError_t *interfaceError, void *outputPayload);
 

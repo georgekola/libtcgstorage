@@ -11,8 +11,10 @@
 
 #include <stdbool.h>
 
+#include "tcgs_config.h"
 #include "tcgs_types.h"
 #include "tcgs_stream.h"
+#include "tcgs_interface.h"
 
 /*****************************************************************************
  * \brief Initializes TCG Storage Host
@@ -29,7 +31,7 @@
  * 
  * \see TCGS_ResetHost, TCGS_DestroyHost
  *****************************************************************************/
-bool TCGS_InitHost(void);
+bool TCGS_InitHost(TCGS_InterfaceDescriptor_t *interfaceDesc);
 
 /*****************************************************************************
  * \brief Re-initializes TCG Storage Host

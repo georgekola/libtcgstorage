@@ -6,7 +6,7 @@
 /// (c) Artem Zankovich, 2012
 /////////////////////////////////////////////////////////////////////////////
 
-#include "tcgs_interface_virtual.h"
+#include "tcgs_interface_vtper.h"
 #include "tcgs_types.h"
 #include "tcgs_interface.h"
 #include "vtper.h"
@@ -51,8 +51,8 @@ static uint32 TCGS_VTper_GetParameter(char *name)
 TCGS_InterfaceDescriptor_t TCGS_VTper_InterfaceDescriptor =
 {
 	INTERFACE_VTPER,
-	(TCGS_InitCommand_t)&TCGS_VTper_Init,
-	(TCGS_SendCommand_t)&TCGS_VTper_Send,
-	(TCGS_SetInterfaceParameterCommand_t)&TCGS_VTper_SetParameter,
-	(TCGS_GetInterfaceParameterCommand_t)&TCGS_VTper_GetParameter
+	(TCGS_OpenCommand_t)&TCGS_VTper_Init,
+	(TCGS_IoCommand_t)&TCGS_VTper_Send,
+	(TCGS_SetParameterCommand_t)&TCGS_VTper_SetParameter,
+	(TCGS_GetParameterCommand_t)&TCGS_VTper_GetParameter
 };

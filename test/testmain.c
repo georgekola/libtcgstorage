@@ -28,7 +28,7 @@ extern void mock_assert(const int result, const char* const expression,
 #include "tcgs_builder.h"
 #include "tcgs_parser.h"
 #include "tcgs_interface.h"
-#include "tcgs_interface_virtual.h"
+#include "tcgs_interface_vtper.h"
 #include "tcgs_interface_encode.h"
 
 /**
@@ -68,8 +68,7 @@ void test_tcgs_host_level0discovery_virtual(void **state)
 	TCGS_Level0Discovery_FeatureTper_t *headerTper;
 
     TCGS_PrepareInterfaceCommand(LEVEL0_DISCOVERY, NULL, &commandBlock, NULL);
-    TCGS_SetInterfaceFunctions(&TCGS_VTper_InterfaceDescriptor);
-    status = TCGS_SendCommand(&commandBlock, NULL, &error, &output);
+    status = TCGS_Interface_IoCommand(&commandBlock, NULL, &error, &output);
     assert_int_equal(error, INTERFACE_ERROR_GOOD);
     assert_int_equal(status, ERROR_SUCCESS);
     header = TCGS_DecodeLevel0Discovery(&output);
@@ -90,7 +89,7 @@ int main(int argc, char* argv[]) {
     };
 	int result;
 
-	TCGS_InitHost();
+	TCGS_InitHost(&TCGS_VTper_InterfaceDescriptor);
 	TCGS_ResetHost();
     result = run_tests(tests);
 	TCGS_DestroyHost();

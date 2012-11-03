@@ -14,38 +14,83 @@
 #include <stdio.h>
 
 #include "tcgs_interface.h"
-#include "tcgs_interface_ata.h"
 #include "tcgs_types.h"
 #include "tcgs_verbose.h"
 
 /// Current interface descriptor
-static TCGS_InterfaceDescriptor_t *TCGS_Interface_Desc = NULL;
+static TCGS_InterfaceDescriptor_t *TCGS_InterfaceDesc = NULL;
 
-void TCGS_SetInterfaceFunctions(TCGS_InterfaceDescriptor_t *descriptor)
+void TCGS_Interface_SetDescripor(TCGS_InterfaceDescriptor_t *descriptor)
 {
-	TCGS_Interface_Desc = descriptor;
+	TCGS_InterfaceDesc = descriptor;
 }
 
-TCGS_InterfaceDescriptor_t* TCGS_GetInterface(void)
+TCGS_InterfaceDescriptor_t* TCGS_Interface_GetDesciptor(void)
 {
-	return TCGS_Interface_Desc;
+	return TCGS_InterfaceDesc;
 }
 
+//array of supported interfaces (type code + printable name)
+TCGS_InterfaceName_t TCGS_InterfaceNames[] = 
+{
+#if defined(TCGS_INTERFACE_SCSI_SUPPORTED)
+    {INTERFACE_SCSI, "SCSI"},
+#endif //TCGS_INTERFACE_SCSI_SUPPORTED
+#if defined(TCGS_INTERFACE_ATA_SUPPORTED)
+    {INTERFACE_ATA, "ATA"},
+#endif //TCGS_INTERFACE_ATA_SUPPORTED
+#if defined(TCGS_INTERFACE_NVM_EXPRESS_SUPPORTED)
+    {INTERFACE_NVM_EXPRESS, "NVMExpress"},
+#endif //TCGS_INTERFACE_NVM_EXPRESS_SUPPORTED
+#if defined(TCGS_INTERFACE_VTPER_SUPPORTED)
+    {INTERFACE_VTPER, "VTPer"},
+#endif //TCGS_INTERFACE_VTPER_SUPPORTED
+    {INTERFACE_UNKNOWN, NULL},
+};
 
 /*****************************************************************************
- * \brief Map command to ATA interface and send it to TPer. Return response and status.
+ * \brief Get internal interface code by printable interface name
+ *
+ * @param[in]  name     printable interface name
+ *
+ * \return internal interface code
+ *
+ * \see TCGS_InterfaceNames
+ *
+ *****************************************************************************/
+TCGS_Interface_t TCGS_Interface_GetCode(char *name)
+{
+    TCGS_InterfaceName_t *interface;
+    
+    for (interface = &TCGS_InterfaceNames[0]; interface->type != INTERFACE_UNKNOWN; interface++) {
+        if(strcmpi(interface->name, name) == 0) {
+            return interface->type;
+        }
+    }
+    
+    return INTERFACE_UNKNOWN;
+}
+
+TCGS_Error_t TCGS_Interface_OpenDevice(char *device)
+{
+    return (*TCGS_InterfaceDesc->open)(device);
+}
+
+/*****************************************************************************
+ * \brief Map command to current interface and send it to TPer. Return response (if provided)
+ * and status.
  *
  * @param[in]  inputCommandBlock      input command block
- * @param[in]  inputPayload           input payload. NULL if command has no data
- * @param[out] tperError              interface command error status
- * @param[out] outputPayload          output payload
+ * @param[in]  inputPayload                 input payload. NULL if command has no data
+ * @param[out] tperError                     interface command error status
+ * @param[out] outputPayload              output payload
  *
- * \return ERROR_SUCCESS if interface command is successfully mapped to ATA transport
+ * \return ERROR_SUCCESS if interface command is successfully mapped to transport command
  * sent to TPer and the last returned response (error status code and payload). Error code
  * ERROR_INTERFACE is returned when
  *
  *****************************************************************************/
-TCGS_InterfaceError_t TCGS_SendCommand(
+TCGS_InterfaceError_t TCGS_Interface_IoCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
@@ -54,49 +99,32 @@ TCGS_InterfaceError_t TCGS_SendCommand(
 	printf(TCGS_VERBOSE_COMMAND_SEPARATOR "\n");
 	TCGS_PrintCommand(inputCommandBlock);
 #endif //TCGS_VERBOSE
-	error = (*TCGS_Interface_Desc->send)(inputCommandBlock, inputPayload, tperError, outputPayload);
+	error = (*TCGS_InterfaceDesc->send)(inputCommandBlock, inputPayload, tperError, outputPayload);
 #if TCGS_VERBOSE
 	printf(TCGS_VERBOSE_COMMAND_SEPARATOR "\n");
 #endif //TCGS_VERBOSE
 	return error;
 }
 
-#define MAX_INTERFACE_PARAMETER_LENGTH 32
-
-typedef struct
-{
-	char    name[MAX_INTERFACE_PARAMETER_LENGTH + 1];
-	uint32  value;
-} TCGS_IntefaceParameter_t;
-
-TCGS_IntefaceParameter_t parameters[] =
-{
-		{"ata.transport_mode", (uint32)ATA_TRANSPORT_DMA},
-};
-
-void TCGS_SetParameter(char *name, uint32 value)
+void TCGS_Interface_SetParameter(TCGS_IntefaceParameters_t *params, char *name, uint32 value)
 {
 	int i;
 
-	for (i = 0; i < sizeof(parameters) / sizeof(parameters[0]); i++)
-	{
-		if (strncmp(name, parameters[i].name, MAX_INTERFACE_PARAMETER_LENGTH))
-		{
-			parameters[i].value = value;
+	for (i = 0; i < params->length; i++) {
+		if (strcmpi(name, params->param[i].name)) {
+			params->param[i].value = value;
 			break;
 		}
 	}
 }
 
-uint32 TCGS_GetParameter(char *name)
+uint32 TCGS_Interface_GetParameter(TCGS_IntefaceParameters_t *params, char *name)
 {
 	int i;
 
-	for (i = 0; i < sizeof(parameters) / sizeof(parameters[0]); i++)
-	{
-		if (strncmp(name, parameters[i].name, MAX_INTERFACE_PARAMETER_LENGTH))
-		{
-			return parameters[i].value;
+	for (i = 0; i < params->length; i++) {
+		if (strcmpi(name, params->param[i].name)) {
+			return params->param[i].value;
 		}
 	}
 

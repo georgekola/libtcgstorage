@@ -10,10 +10,6 @@
 #include "tcgs_interface_ata.h"
 #include "tcgs_types.h"
 
-static void TCGS_ATA_Init(void)
-{
-	return;
-}
 
 /*****************************************************************************
  * \brief Map command to ATA interface and send it to TPer. Return response and status.
@@ -46,11 +42,14 @@ static uint32 TCGS_ATA_GetParameter(char *name)
 	return 0;
 }
 
+/*
 TCGS_InterfaceDescriptor_t TCGS_ATA_InterfaceDescriptor =
 {
 	INTERFACE_ATA,
-	(TCGS_InitCommand_t)&TCGS_ATA_Init,
-	(TCGS_SendCommand_t)&TCGS_ATA_Send,
-	(TCGS_SetInterfaceParameterCommand_t)&TCGS_ATA_SetParameter,
-	(TCGS_GetInterfaceParameterCommand_t)&TCGS_ATA_GetParameter,
+	(TCGS_OpenCommand_t)&TCGS_ATA_Open,
+	(TCGS_IoCommand_t)&TCGS_ATA_Send,
+	(TCGS_SetParameterCommand_t)&TCGS_ATA_SetParameter,
+	(TCGS_GetParameterCommand_t)&TCGS_ATA_GetParameter,
 };
+*/
+

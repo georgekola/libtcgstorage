@@ -30,9 +30,9 @@
  * 
  * \see TCGS_ResetHost, TCGS_DestroyHost
  *****************************************************************************/
-bool TCGS_InitHost(void)
+bool TCGS_InitHost(TCGS_InterfaceDescriptor_t *interfaceDesc)
 {
-    return TRUE;
+    TCGS_Interface_SetDescripor(interfaceDesc);
 }
 
 /*****************************************************************************
@@ -92,7 +92,7 @@ TCGS_Error_t TCGS_Level0Discovery(void)
 	TCGS_InterfaceError_t errorInterface;
 
     TCGS_PrepareInterfaceCommand(LEVEL0_DISCOVERY, NULL, &commandBlock, NULL);
-    status = TCGS_SendCommand(&commandBlock, NULL, &errorInterface, &TCGS_Buffer_Level0Discovery);
+    status = TCGS_Interface_IoCommand(&commandBlock, NULL, &errorInterface, &TCGS_Buffer_Level0Discovery);
     if (status != ERROR_SUCCESS)
     {
         return status;
