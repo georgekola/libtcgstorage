@@ -92,7 +92,7 @@ static char* getDiskName(const HANDLE handle)
 }
 
 
-void listDevicesAta()
+void listDevicesImpl()
 {
     const char* devicePathPattern = "\\\\.\\PhysicalDrive%u";
     char devicePath[] = "\\\\.\\PhysicalDrive00";

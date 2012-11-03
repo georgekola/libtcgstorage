@@ -63,7 +63,7 @@ TCGS_Interface_t TCGS_Interface_GetCode(char *name)
     TCGS_InterfaceName_t *interface;
     
     for (interface = &TCGS_InterfaceNames[0]; interface->type != INTERFACE_UNKNOWN; interface++) {
-        if(strcmpi(interface->name, name) == 0) {
+        if (strncasecmp(interface->name, name, MAX_INTERFACE_PARAMETER_NAME_LENGTH) == 0) {
             return interface->type;
         }
     }
@@ -111,7 +111,7 @@ void TCGS_Interface_SetParameter(TCGS_IntefaceParameters_t *params, char *name, 
 	int i;
 
 	for (i = 0; i < params->length; i++) {
-		if (strcmpi(name, params->param[i].name)) {
+		if (strncasecmp(name, params->param[i].name, MAX_INTERFACE_PARAMETER_NAME_LENGTH)) {
 			params->param[i].value = value;
 			break;
 		}
@@ -123,7 +123,7 @@ uint32 TCGS_Interface_GetParameter(TCGS_IntefaceParameters_t *params, char *name
 	int i;
 
 	for (i = 0; i < params->length; i++) {
-		if (strcmpi(name, params->param[i].name)) {
+		if (strncasecmp(name, params->param[i].name, MAX_INTERFACE_PARAMETER_NAME_LENGTH)) {
 			return params->param[i].value;
 		}
 	}

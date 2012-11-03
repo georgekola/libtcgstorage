@@ -10,4 +10,4 @@ add_subdirectory (test)
 add_subdirectory (vtper)
 add_subdirectory (tcgsparm)
 
-#TARGET_LINK_LIBRARIES(libtcgstorage)
+#TARGET_LINK_LIBRARIES(tcgstorage)

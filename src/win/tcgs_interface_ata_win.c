@@ -8,9 +8,9 @@
 
 #if (defined(_WIN32) || defined(_WIN64))
 
-#include "..\tcgs_interface.h"
-#include "..\tcgs_interface_ata.h"
-#include "..\tcgs_types.h"
+#include "../tcgs_interface.h"
+#include "../tcgs_interface_ata.h"
+#include "../tcgs_types.h"
 
 #include <stdio.h>
 #include <windows.h>

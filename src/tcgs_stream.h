@@ -57,9 +57,10 @@ typedef struct {
     uint8		ackSupported				:1;
     uint8		bufferManagementSupported	:1;
     uint8		streamingSupported			:1;
-    uint8       reserved1					:1;
+    uint8		reserved1					:1;
     uint8		comIdManagementSupported	:1;
-    uint8       reserved2					:1;
+    uint8		reserved2					:1;
+
     uint8		reserved3[11];
 } TCGS_Level0Discovery_FeatureTper_t;
 
@@ -69,13 +70,14 @@ typedef struct {
     uint8		reserved	                :4;
     uint8		length;
 
-    uint8       reserved1                   :2;
     uint8		lockingSupport				:1;
     uint8		lockingEnabled				:1;
     uint8		locked						:1;
     uint8		mediaEncryption				:1;
     uint8		MBREnabled					:1;
     uint8		MBRDone						:1;
+    uint8		reserved1                   :2;
+
     uint8		reserved2[11];
 } TCGS_Level0Discovery_FeatureLocking_t;
 
@@ -84,7 +86,7 @@ typedef struct {
     uint8		version		                :4;
     uint8		reserved	                :4;
     uint8		length;
-    uint8       reserved1;
+    uint8		reserved1;
     uint8		reserved2[7];
     uint32		LogicalBlockSize;
     uint64		AlignmentGranularity;
@@ -92,19 +94,18 @@ typedef struct {
 } TCGS_Level0Discovery_FeatureGeometry_t;
 
 
-//TODO: define structure according to Enterprise specification
-typedef struct {
-} TCGS_Level0Discovery_FeatureEnterprise_t;
-
 typedef struct {
     uint16 		code;
     uint8		version		                :4;
     uint8		reserved	                :4;
     uint8		length;
+
     uint16  	baseComID;
     uint16  	numberOfComIDs;
+
     uint8		reserved1					:7;
     uint8 		rangeCrossing				:1;
+
     uint8		reserved2[10];
 } TCGS_Level0Discovery_FeatureOpal1_t;
 
@@ -113,6 +114,7 @@ typedef struct {
     uint8		version		                :4;
     uint8		reserved	                :4;
     uint8		length;
+
     uint16  	baseComID;
     uint16  	numberOfComIDs;
     uint8		reserved1					:7;
@@ -123,5 +125,9 @@ typedef struct {
     uint8		behaviorPinSinRevert;
     uint8		reserved2[5];
 } TCGS_Level0Discovery_FeatureOpal2_t;
+
+//TODO: define structure according to Enterprise specification
+typedef struct {
+} TCGS_Level0Discovery_FeatureEnterprise_t;
 
 #endif //_TCGS_STREAM_H  

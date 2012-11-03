@@ -57,7 +57,7 @@ static const featureVerboseMap_t featureVerboseMap[] =
 
 const char * TCGS_Verbose_GetFeature (TCGS_Level0Discovery_FeatureCode_t featureCode, char* featureBuf)
 {
-	const char * result = NULL;
+	const char *result = NULL;
 	int i;
 
 	for (i = 0; i < sizeof(featureVerboseMap) / sizeof(featureVerboseMap[0]); i++)
@@ -67,13 +67,14 @@ const char * TCGS_Verbose_GetFeature (TCGS_Level0Discovery_FeatureCode_t feature
 			result = featureVerboseMap[i].featureName;
 		}
 	}
+
 	if (result != NULL)
 	{
-		sprintf(featureBuf, "%*s", (int)MAX_FEATURE_NAME_LENGTH, result);
+		snprintf(featureBuf, MAX_FEATURE_NAME_LENGTH + 1, "%*s", (int)MAX_FEATURE_NAME_LENGTH, result);
 	}
 	else
 	{
-		sprintf(featureBuf, "0x%X", featureCode);
+		snprintf(featureBuf, MAX_FEATURE_NAME_LENGTH + 1, "0x%X", featureCode);
 	}
 
 	return featureBuf;
@@ -103,17 +104,17 @@ void TCGS_PrintCommand(TCGS_CommandBlock_t* command)
 
 void TCGS_PrintLevel0DiscoveryFeature(TCGS_Level0Discovery_Feature_t *feature)
 {
-	char featureBuf[MAX_FEATURE_NAME_LENGTH];
+	char featureBuf[MAX_FEATURE_NAME_LENGTH + 1];
 
 	printf(TCGS_VERBOSE_BLOCK_SEPARATOR "\n");
 	printf( "Feature Code: %*s\n"
 			"Version:              %3d\n"
 			"Length:               %3d\n",
-			(int)MAX_FEATURE_NAME_LENGTH, TCGS_Verbose_GetFeature(feature->code, featureBuf),
+			(int)MAX_FEATURE_NAME_LENGTH, TCGS_Verbose_GetFeature((TCGS_Level0Discovery_FeatureCode_t)feature->code, featureBuf),
 			feature->version,
 			feature->length);
-
-	switch(feature->code)
+	
+	switch((TCGS_Level0Discovery_FeatureCode_t)feature->code)
 	{
 	case FEATURE_TPER:
 		#define featureTPer ((TCGS_Level0Discovery_FeatureTper_t*)(void*)feature)
@@ -155,6 +156,9 @@ void TCGS_PrintLevel0DiscoveryFeature(TCGS_Level0Discovery_Feature_t *feature)
 			featureOpal1->baseComID,
 			featureOpal1->numberOfComIDs,
 			featureOpal1->rangeCrossing);
+		break;
+	default:
+		//do nothing
 		break;
 	}
 }

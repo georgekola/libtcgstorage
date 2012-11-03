@@ -8,7 +8,7 @@
 #ifndef _TCGSPARM_PLATFORM_H
 #define _TCGSPARM_PLATFORM_H  
 
-void listDevicesAta(void);
+void listDevicesImpl(void);
 
 #endif //_TCGSPARM_PLATFORM_H
 

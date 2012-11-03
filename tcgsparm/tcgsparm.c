@@ -47,11 +47,12 @@ void listDevices(TCGS_Interface_t interface, Arguments_t *args)
     switch (interface)
     {
     case INTERFACE_UNKNOWN:
-        break;
+        return;
     case INTERFACE_ATA:
         printf("Devices list for interface: %s\n", args->interface);
-        listDevicesAta();
+        break;
     }
+    listDevicesImpl();
 }
 
 void listInterfaces(Arguments_t *args)

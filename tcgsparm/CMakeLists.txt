@@ -1,6 +1,6 @@
 set(CMAKE_C_FLAGS "")
 
-include_directories (${LIBTCGSTORAGE_SOURCE_DIR}/src 
+include_directories (${LIBTCGSTORAGE_SOURCE_DIR}/src
 ${LIBTCGSTORAGE_SOURCE_DIR}/vtper ${LIBTCGSTORAGE_SOURCE_DIR}/tcgsparm)
 
 ###################################################
@@ -13,7 +13,8 @@ IF(WIN32)
 	source_group("Source.win" FILES ${tcgsparm_win_srcs})
 ENDIF(WIN32)
 IF(UNIX)
-    
+	file(GLOB tcgsparm_unix_srcs "unix/*.c")
+	source_group("Source.unix" FILES ${tcgsparm_unix_srcs})    
 ENDIF(UNIX)
 
 ###################################################
@@ -29,7 +30,7 @@ IF(WIN32)
 	add_executable (tcgsparm ${tcgsparm_srcs} ${tcgsparm_win_srcs})
 ENDIF(WIN32)
 IF(UNIX)
-    
+    add_executable (tcgsparm ${tcgsparm_srcs} ${tcgsparm_unix_srcs})
 ENDIF(UNIX)
 
 target_link_libraries (tcgsparm tcgstorage vtper)
