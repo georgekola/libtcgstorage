@@ -29,7 +29,7 @@ TCGS_IntefaceParameters_t parameters[] =
 
 static TCGS_Error_t TCGS_ATA_Open(char* device)
 {
-	printf("(not implemented)");
+    printf("(not implemented)\n");
     return ERROR_INTERFACE;
 }
 
@@ -50,7 +50,7 @@ static TCGS_Error_t TCGS_ATA_Send(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
-	printf("(not implemented)");
+    printf("(not implemented)\n");
     return ERROR_INTERFACE;
 }
 

@@ -87,9 +87,9 @@ uint8 TCGS_Buffer_Level0Discovery[TCGS_BLOCK_SIZE];
  *****************************************************************************/
 TCGS_Error_t TCGS_Level0Discovery(void)
 {
-	TCGS_CommandBlock_t commandBlock;
-	TCGS_Error_t status;
-	TCGS_InterfaceError_t errorInterface;
+    TCGS_CommandBlock_t commandBlock;
+    TCGS_Error_t status;
+    TCGS_InterfaceError_t errorInterface;
 
     TCGS_PrepareInterfaceCommand(LEVEL0_DISCOVERY, NULL, &commandBlock, NULL);
     status = TCGS_Interface_IoCommand(&commandBlock, NULL, &errorInterface, &TCGS_Buffer_Level0Discovery);
@@ -97,5 +97,34 @@ TCGS_Error_t TCGS_Level0Discovery(void)
     {
         return status;
     }
+    return ERROR_SUCCESS;
+}
+
+/*****************************************************************************
+ * \brief Process TCG command
+ *
+ * \par The function sends TCG command to opened device and gets response
+ *
+ * \par TCGS_HostInit shall be called before.
+ *
+ * \return TCGS_Error_t with error code in case of error occured during
+ * command processing
+ *
+ * \see TCGS_InitHost
+ *****************************************************************************/
+TCGS_Error_t TCGS_ProcessCommand(char *command, char *response, unsigned responseLength)     
+{
+    TCGS_CommandBlock_t commandBlock;
+    TCGS_Error_t status;
+    TCGS_InterfaceError_t errorInterface;
+
+    //TODO: call parser to get actual command to process, only Level0Discovery for testing
+    TCGS_PrepareInterfaceCommand(LEVEL0_DISCOVERY, NULL, &commandBlock, NULL);
+    status = TCGS_Interface_IoCommand(&commandBlock, NULL, &errorInterface, &TCGS_Buffer_Level0Discovery);
+    if (status != ERROR_SUCCESS)
+    {
+        return status;
+    }
+    strncpy(response, "OK", responseLength);
     return ERROR_SUCCESS;
 }

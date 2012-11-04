@@ -77,4 +77,18 @@ void TCGS_DestroyHost(void);
  *****************************************************************************/
 TCGS_Error_t TCGS_Level0Discovery(void);
 
+/*****************************************************************************
+ * \brief Process TCG command
+ *
+ * \par The function sends TCG command to opened device and gets response
+ *
+ * \par TCGS_HostInit shall be called before.
+ *
+ * \return TCGS_Error_t with error code in case of error occured during
+ * command processing
+ *
+ * \see TCGS_InitHost
+ *****************************************************************************/
+TCGS_Error_t TCGS_ProcessCommand(char *command, char *response, unsigned responseLength);
+
 #endif //_LIBTCGSTORAGE_H

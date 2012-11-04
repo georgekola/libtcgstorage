@@ -127,40 +127,60 @@ Arguments_t *decodeArguments(int argc, char* argv[])
 
 TCGS_Error_t openDevice(TCGS_Interface_t interface, Arguments_t *args)
 {
+    TCGS_Error_t status = ERROR_SUCCESS;
+
     switch (interface)
     {
 #if defined(TCGS_INTERFACE_ATA_SUPPORTED)
     case INTERFACE_ATA:
-        TCGS_InitHost(&TCGS_ATA_InterfaceDescriptor);
-        TCGS_Interface_OpenDevice(args->device);
+        status = TCGS_InitHost(&TCGS_ATA_InterfaceDescriptor);
+        if (status != ERROR_SUCCESS) {
+            return status;
+        }
+
+        status = TCGS_Interface_OpenDevice(args->device);
+        if (status != ERROR_SUCCESS) {
+            return status;
+        }
         break;
 #endif //defined(TCGS_INTERFACE_ATA_SUPPORTED)
 
 #if defined(TCGS_INTERFACE_SCSI_SUPPORTED)
     case INTERFACE_SCSI:
-        fprintf(stderr, "SCSI devices are not supproted at this moment\n");
+        fprintf(stderr, "SCSI devices are not supported at this moment\n");
         return ERROR_INTERFACE;
 #endif //defined(TCGS_INTERFACE_SCSI_SUPPORTED)
 
 #if defined(TCGS_INTERFACE_NVM_EXPRESS_SUPPORTED)
     case INTERFACE_NVM_EXPRESS:
-        fprintf(stderr, "NVM Express devices are not supproted at this moment\n");
+        fprintf(stderr, "NVM Express devices are not supported at this moment\n");
         return ERROR_INTERFACE;
 #endif //defined(TCGS_INTERFACE_NVM_EXPRESS_SUPPORTED)
 
 #if defined(TCGS_INTERFACE_VTPER_SUPPORTED)
     case INTERFACE_VTPER:
-        TCGS_InitHost(&TCGS_VTper_InterfaceDescriptor);
+        status = TCGS_InitHost(&TCGS_VTper_InterfaceDescriptor);
+        if (status != ERROR_SUCCESS) {
+            return status;
+        }
         break;
 #endif //defined(TCGS_INTERFACE_VTPER_SUPPORTED)
     }
 
-    return ERROR_SUCCESS;
+    return status;
 }
 
 void processCommand(Arguments_t *args)
 {
+    char response[128];
+
     printf("Processing command: %s\n", args->command);
+    if (TCGS_ProcessCommand(args->command, response, sizeof(response)) != ERROR_SUCCESS) {
+        printf ("Error processing command\n");
+    }
+    else {
+        printf ("Command processed: %s\n", response);
+    }
 }
 
 //utility entry point
@@ -190,7 +210,7 @@ int main(int argc, char* argv[])
 
     if (args->device != NULL || interface == INTERFACE_VTPER) {
         if (openDevice(interface, args) != ERROR_SUCCESS) {
-            fprintf(stderr, "%s: error -- invalid device: %s\n", argv[0], args->device);
+            fprintf(stderr, "%s: error -- device is not opened: %s\n", argv[0], args->device);
             listDevices(interface, args);
             exit(1);
         }

@@ -13,9 +13,8 @@
 
 void listDevicesImpl()
 {
-	printf ("(not implemented)");
+    printf ("(not implemented)\n");
 
     return;
 }
-
 
