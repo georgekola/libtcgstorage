@@ -95,15 +95,15 @@ TCGS_InterfaceError_t TCGS_Interface_IoCommand(
     TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
 	TCGS_InterfaceError_t error;
+
 #if TCGS_VERBOSE
 	printf(TCGS_VERBOSE_COMMAND_SEPARATOR "\n");
 	TCGS_PrintCommand(inputCommandBlock);
-#endif //TCGS_VERBOSE
-	error = (*TCGS_InterfaceDesc->send)(inputCommandBlock, inputPayload, tperError, outputPayload);
-#if TCGS_VERBOSE
 	printf(TCGS_VERBOSE_COMMAND_SEPARATOR "\n");
 #endif //TCGS_VERBOSE
-	return error;
+	error = (*TCGS_InterfaceDesc->send)(inputCommandBlock, inputPayload, tperError, outputPayload);
+
+    return error;
 }
 
 void TCGS_Interface_SetParameter(TCGS_IntefaceParameters_t *params, char *name, uint32 value)

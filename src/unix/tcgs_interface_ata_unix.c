@@ -23,9 +23,6 @@ TCGS_IntefaceParameters_t parameters[] =
 	parameter
 };
 
-#define BLOCK_SIZE 512
-//TODO: fix handling of x=0
-#define BYTES2BLOCKS(x) (((x - 1) >> 9) + 1)    // fit data to 512 blocks
 
 static TCGS_Error_t TCGS_ATA_Open(char* device)
 {

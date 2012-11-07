@@ -14,19 +14,20 @@
 
 typedef enum
 {
-	INTERFACE_ERROR_GOOD,
-	INTERFACE_ERROR_INVALID_SECURITY_PROTOCOL_ID_PARAMATER,
-	INTERFACE_ERROR_INVALID_TRANSFER_LENGTH_PARAMETER_ON_IF_SEND,
-	INTERFACE_ERROR_OTHER_INVALID_COMMAND_PARAMETER,
-	INTERFACE_ERROR_SYNCHRONOUS_PROTOCOL_VIOLATION,
-	INTERFACE_ERROR_DATA_PROTECTION,
+    INTERFACE_ERROR_GOOD,
+    INTERFACE_ERROR_INVALID_SECURITY_PROTOCOL_ID_PARAMATER,
+    INTERFACE_ERROR_INVALID_TRANSFER_LENGTH_PARAMETER_ON_IF_SEND,
+    INTERFACE_ERROR_OTHER_INVALID_COMMAND_PARAMETER,
+    INTERFACE_ERROR_SYNCHRONOUS_PROTOCOL_VIOLATION,
+    INTERFACE_ERROR_DATA_PROTECTION,
+    INTERFACE_ERROR_COMMON,   //this error is used when SDR is disabled
 } TCGS_InterfaceError_t;
 
 typedef enum
 {
-	IF_SEND,
-	IF_RECV,
-	IF_LAST,	//special value that stores number of values in this enum
+    IF_SEND,
+    IF_RECV,
+    IF_LAST,    //special value that stores number of values in this enum
 } TCGS_Command_t;
 
 /*
@@ -38,10 +39,10 @@ typedef enum
  */
 typedef struct
 {
-	TCGS_Command_t command;   		//Either IF-SEND or IF-RECV
-	uint8          protocolId;      //Between 0x01 and 0x06
-	uint32         length;          //The amount of data to be transferred, in bytes
-	uint32         comId;           //The ComID to be used, for Protocol IDs 0x01, 0x02, 0x06
+    TCGS_Command_t command;         //Either IF-SEND or IF-RECV
+    uint8          protocolId;      //Between 0x01 and 0x06
+    uint32         length;          //The amount of data to be transferred, in bytes
+    uint32         comId;           //The ComID to be used, for Protocol IDs 0x01, 0x02, 0x06
 } TCGS_CommandBlock_t;
 
 /*****************************************************************************
@@ -53,18 +54,18 @@ typedef struct
  *****************************************************************************/
 typedef enum
 {
-	INTERFACE_UNKNOWN,
+    INTERFACE_UNKNOWN,
 #if defined(TCGS_INTERFACE_SCSI_SUPPORTED)
-	INTERFACE_SCSI,
+    INTERFACE_SCSI,
 #endif //TCGS_INTERFACE_SCSI_SUPPORTED
 #if defined(TCGS_INTERFACE_ATA_SUPPORTED)
-	INTERFACE_ATA,
+    INTERFACE_ATA,
 #endif //TCGS_INTERFACE_ATA_SUPPORTED
 #if defined(TCGS_INTERFACE_NVM_EXPRESS_SUPPORTED)
-	INTERFACE_NVM_EXPRESS,
+    INTERFACE_NVM_EXPRESS,
 #endif //TCGS_INTEFACE_VTPER_SUPPORTED
 #if defined(TCGS_INTERFACE_VTPER_SUPPORTED)
-	INTERFACE_VTPER
+    INTERFACE_VTPER
 #endif //TCGS_INTEFACE_VTPER_SUPPORTED
 } TCGS_Interface_t;
 
@@ -97,13 +98,36 @@ TCGS_Interface_t TCGS_Interface_GetCode(char *name);
  *****************************************************************************/
 typedef TCGS_Error_t (*TCGS_OpenCommand_t) (char *device);
 
+typedef TCGS_Error_t (*TCGS_CloseCommand_t) (void);
+
+/*****************************************************************************
+ * \brief Map TCG command to an interface one and send it to TPer.
+ *
+ * Depending on command direction command can either send data to device
+ * or receive data from it.
+ *
+ * Device shall be opened with TCGS_OpenCommand_t command before.
+ *
+ * @param[in]  inputCommandBlock      input command block
+ * @param[in]  inputPayload           input payload. NULL for read command
+ * @param[out] tperError              interface command error status
+ * @param[out] outputPayload          output payload. NULL for write command
+ *
+ * \return ERROR_SUCCESS if interface command is successfully mapped to
+ * transport command that is sent to TPer. Returned response (if applicable) 
+ * and error status code are returned by refference. Error code ERROR_INTERFACE
+ * is returned otherwise
+ *
+ * \see TCGS_OpenCommand_t
+ *****************************************************************************/
+
 typedef TCGS_InterfaceError_t (*TCGS_IoCommand_t)
-	(TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
-	 TCGS_InterfaceError_t *interfaceError, void *outputPayload);
+    (TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
+     TCGS_InterfaceError_t *interfaceError, void *outputPayload);
 
-typedef void	(*TCGS_SetParameterCommand_t)	(char *name, uint32 value);
+typedef void    (*TCGS_SetParameterCommand_t)   (char *name, uint32 value);
 
-typedef uint32	(*TCGS_GetParameterCommand_t)	(char *name);
+typedef uint32  (*TCGS_GetParameterCommand_t)   (char *name);
 
 typedef TCGS_Error_t (*TCGS_UpdateDeviceParameters) (void);
 
@@ -119,11 +143,12 @@ typedef TCGS_Error_t (*TCGS_UpdateDeviceParameters) (void);
  *****************************************************************************/
 typedef struct
 {
-	TCGS_Interface_t	type;
-	TCGS_OpenCommand_t	open;
-	TCGS_IoCommand_t	send;
-	TCGS_SetParameterCommand_t setParameter;
-	TCGS_GetParameterCommand_t getParameter;
+    TCGS_Interface_t     type;
+    TCGS_OpenCommand_t   open;
+    TCGS_CloseCommand_t  close;
+    TCGS_IoCommand_t     send;
+    TCGS_SetParameterCommand_t setParameter;
+    TCGS_GetParameterCommand_t getParameter;
     TCGS_UpdateDeviceParameters updateDeviceParameters;
 } TCGS_InterfaceDescriptor_t;
 
@@ -155,8 +180,8 @@ typedef struct
  */
 typedef struct
 {
-	char                            name[MAX_INTERFACE_PARAMETER_NAME_LENGTH + 1];
-	uint32                          value;
+    char                            name[MAX_INTERFACE_PARAMETER_NAME_LENGTH + 1];
+    uint32                          value;
 } TCGS_IntefaceParameter_t;
 
 
@@ -173,8 +198,8 @@ typedef struct
  */
 typedef struct
 {
-	unsigned length;
-	TCGS_IntefaceParameter_t *param;
+    unsigned length;
+    TCGS_IntefaceParameter_t *param;
 } TCGS_IntefaceParameters_t;
 
 

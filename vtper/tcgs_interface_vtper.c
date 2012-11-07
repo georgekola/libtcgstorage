@@ -6,15 +6,22 @@
 /// (c) Artem Zankovich, 2012
 /////////////////////////////////////////////////////////////////////////////
 
+#include <stdio.h>
+
 #include "tcgs_interface_vtper.h"
 #include "tcgs_types.h"
 #include "tcgs_interface.h"
 #include "vtper.h"
 
 
-static void TCGS_VTper_Init(void)
+static TCGS_Error_t TCGS_VTper_Init(void)
 {
-	return;
+	return ERROR_SUCCESS;
+}
+
+static TCGS_Error_t TCGS_VTper_Close(void)
+{
+	return ERROR_SUCCESS;
 }
 
 /*****************************************************************************
@@ -31,11 +38,11 @@ static void TCGS_VTper_Init(void)
  * code and payload). Error code ERROR_INTERFACE is returned otherwise
  *
  *****************************************************************************/
-static TCGS_InterfaceError_t TCGS_VTper_Send(
+static TCGS_InterfaceError_t TCGS_VTper_IoCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
-	return TCGS_VTPER_SendCommand(inputCommandBlock, inputPayload, tperError, outputPayload);
+	return TCGS_VTPER_IoCommand(inputCommandBlock, inputPayload, tperError, outputPayload);
 }
 
 static void TCGS_VTper_SetParameter(char *name, uint32 value)
@@ -52,7 +59,8 @@ TCGS_InterfaceDescriptor_t TCGS_VTper_InterfaceDescriptor =
 {
 	INTERFACE_VTPER,
 	(TCGS_OpenCommand_t)&TCGS_VTper_Init,
-	(TCGS_IoCommand_t)&TCGS_VTper_Send,
+	(TCGS_CloseCommand_t)&TCGS_VTper_Close,
+	(TCGS_IoCommand_t)&TCGS_VTper_IoCommand,
 	(TCGS_SetParameterCommand_t)&TCGS_VTper_SetParameter,
 	(TCGS_GetParameterCommand_t)&TCGS_VTper_GetParameter
 };

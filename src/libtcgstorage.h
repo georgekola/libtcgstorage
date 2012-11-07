@@ -25,13 +25,9 @@
  * \par The second call of the function fails, use TCGS_ResetHost
  * to re-initialize TCG Storage Host.
  *
- * \return
- *  TRUE if initialization is completed successfully,
- *  FALSE otherwise
- * 
  * \see TCGS_ResetHost, TCGS_DestroyHost
  *****************************************************************************/
-bool TCGS_InitHost(TCGS_InterfaceDescriptor_t *interfaceDesc);
+void TCGS_InitHost(TCGS_InterfaceDescriptor_t *interfaceDesc);
 
 /*****************************************************************************
  * \brief Re-initializes TCG Storage Host
@@ -76,5 +72,10 @@ void TCGS_DestroyHost(void);
  * \see TCGS_InitHost, TCGS_GetLevel0Discovery
  *****************************************************************************/
 TCGS_Error_t TCGS_Level0Discovery(void);
+
+/*
+ * Receives last error code of libtcgstore
+ */
+TCGS_ErrorCode_t TCGS_GetError(void);
 
 #endif //_LIBTCGSTORAGE_H

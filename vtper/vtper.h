@@ -15,7 +15,7 @@
 
 void TCGS_VTPer_Init(void);
 
-TCGS_InterfaceError_t TCGS_VTPER_SendCommand(
+TCGS_InterfaceError_t TCGS_VTPER_IoCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_InterfaceError_t *tperError, void *outputPayload);
 

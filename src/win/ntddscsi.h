@@ -172,6 +172,7 @@ extern "C" {
 #define ATA_FLAGS_DATA_OUT (1 << 2)
 #define ATA_FLAGS_48BIT_COMMAND (1 << 3)
 #define ATA_FLAGS_USE_DMA (1 << 4)
+#define ATA_FLAGS_NO_MULTIPLE   0x20 // Vista
 
   typedef struct _SCSI_BUS_DATA {
     UCHAR NumberOfLogicalUnits;

@@ -132,7 +132,10 @@ TCGS_Error_t openDevice(TCGS_Interface_t interface, Arguments_t *args)
 #if defined(TCGS_INTERFACE_ATA_SUPPORTED)
     case INTERFACE_ATA:
         TCGS_InitHost(&TCGS_ATA_InterfaceDescriptor);
-        TCGS_Interface_OpenDevice(args->device);
+        if (TCGS_Interface_OpenDevice(args->device) != ERROR_SUCCESS) {
+            printf("Error opening device\n");
+            exit(-1);
+        }
         break;
 #endif //defined(TCGS_INTERFACE_ATA_SUPPORTED)
 
@@ -161,6 +164,10 @@ TCGS_Error_t openDevice(TCGS_Interface_t interface, Arguments_t *args)
 void processCommand(Arguments_t *args)
 {
     printf("Processing command: %s\n", args->command);
+    if (TCGS_Level0Discovery() != ERROR_SUCCESS) {
+        printf("Error processing command\n");
+        exit(0);
+    }
 }
 
 //utility entry point
@@ -196,9 +203,8 @@ int main(int argc, char* argv[])
         }
         
         processCommand(args);
-    }
-    else
-    {
+        exit(0);
+    } else {
         fprintf(stderr, "%s: error -- no device specified for interface: %s\n", argv[0], args->interface);
         listDevices(interface, args);
         exit(1);
