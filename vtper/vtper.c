@@ -32,7 +32,7 @@ uint8 appnote_response_level0discovery[] =
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-TCGS_InterfaceError_t TCGS_VTPER_SendCommand(
+TCGS_InterfaceError_t TCGS_VTPER_IoCommand(
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
@@ -48,9 +48,8 @@ TCGS_InterfaceError_t TCGS_VTPER_SendCommand(
 				if (inputCommandBlock->comId == 0x01)
 				{
 					//Level 0 Discovery
-					//TODO: replace 100 with actual buffer length
-					memset(outputPayload, 0, 100);
-					memcpy(outputPayload, appnote_response_level0discovery, sizeof(appnote_response_level0discovery));
+					memset(outputPayload, 0, inputCommandBlock->length);
+					memmove(outputPayload, appnote_response_level0discovery, sizeof(appnote_response_level0discovery));
 				}
 				break;
 			}

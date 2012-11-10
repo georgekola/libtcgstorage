@@ -12,24 +12,15 @@
 
 #include <stdio.h>
 
-TCGS_IntefaceParameter_t parameter[] =
+static TCGS_Error_t TCGS_ATA_Open_unix(char* device)
 {
-	{"ata.transport_mode", (uint32)ATA_TRANSPORT_DMA},
-};
+    printf("TCGS_ATA_Open_unix -- (not implemented)\n");
+    return ERROR_INTERFACE;
+}
 
-TCGS_IntefaceParameters_t parameters[] =
+static TCGS_Error_t TCGS_ATA_Close_unix(char* device)
 {
-	sizeof(parameter) / sizeof(parameter[0]),
-	parameter
-};
-
-#define BLOCK_SIZE 512
-//TODO: fix handling of x=0
-#define BYTES2BLOCKS(x) (((x - 1) >> 9) + 1)    // fit data to 512 blocks
-
-static TCGS_Error_t TCGS_ATA_Open(char* device)
-{
-    printf("(not implemented)\n");
+    printf("TCGS_ATA_Close_unix -- (not implemented)\n");
     return ERROR_INTERFACE;
 }
 
@@ -46,29 +37,31 @@ static TCGS_Error_t TCGS_ATA_Open(char* device)
  * ERROR_INTERFACE is returned otherwise
  *
  *****************************************************************************/
-static TCGS_Error_t TCGS_ATA_Send(
+static TCGS_Error_t TCGS_ATA_IoCommand_unix (
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
-    printf("(not implemented)\n");
+    printf("TCGS_ATA_IoCommand_unix -- (not implemented)\n");
     return ERROR_INTERFACE;
 }
 
-static void TCGS_ATA_SetParameter(char *name, uint32 value)
+TCGS_Error_t TCGS_ATA_SetDeviceParameter_unix (char *name, uint32 value)
 {
-	return;
+    return ERROR_INTERFACE;
 }
 
-static uint32 TCGS_ATA_GetParameter(char *name)
+static TCGS_Error_t TCGS_ATA_UpdateDeviceParameters_unix (void)
 {
-	return 0;
+    return ERROR_SUCCESS;
 }
 
 TCGS_InterfaceDescriptor_t TCGS_ATA_InterfaceDescriptor =
 {
-	INTERFACE_ATA,
-	(TCGS_OpenCommand_t)&TCGS_ATA_Open,
-	(TCGS_IoCommand_t)&TCGS_ATA_Send,
-	(TCGS_SetParameterCommand_t)&TCGS_ATA_SetParameter,
-	(TCGS_GetParameterCommand_t)&TCGS_ATA_GetParameter,
+    INTERFACE_ATA,
+    (TCGS_OpenCommand_t)&TCGS_ATA_Open_unix,
+    (TCGS_CloseCommand_t)&TCGS_ATA_Close_unix,
+    (TCGS_IoCommand_t)&TCGS_ATA_IoCommand_unix,
+    (TCGS_GetParameters_t)&TCGS_ATA_GetParameters,
+    (TCGS_SetDeviceParameter_t)&TCGS_ATA_SetDeviceParameter_unix,
+    (TCGS_UpdateDeviceParameters_t)&TCGS_ATA_UpdateDeviceParameters_unix,
 };

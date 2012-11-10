@@ -133,10 +133,7 @@ TCGS_Error_t openDevice(TCGS_Interface_t interface, Arguments_t *args)
     {
 #if defined(TCGS_INTERFACE_ATA_SUPPORTED)
     case INTERFACE_ATA:
-        status = TCGS_InitHost(&TCGS_ATA_InterfaceDescriptor);
-        if (status != ERROR_SUCCESS) {
-            return status;
-        }
+        TCGS_InitHost(&TCGS_ATA_InterfaceDescriptor);
 
         status = TCGS_Interface_OpenDevice(args->device);
         if (status != ERROR_SUCCESS) {
@@ -159,10 +156,13 @@ TCGS_Error_t openDevice(TCGS_Interface_t interface, Arguments_t *args)
 
 #if defined(TCGS_INTERFACE_VTPER_SUPPORTED)
     case INTERFACE_VTPER:
-        status = TCGS_InitHost(&TCGS_VTper_InterfaceDescriptor);
+        TCGS_InitHost(&TCGS_VTper_InterfaceDescriptor);
+
+        status = TCGS_Interface_OpenDevice(args->device);
         if (status != ERROR_SUCCESS) {
             return status;
         }
+
         break;
 #endif //defined(TCGS_INTERFACE_VTPER_SUPPORTED)
     }
@@ -177,6 +177,7 @@ void processCommand(Arguments_t *args)
     printf("Processing command: %s\n", args->command);
     if (TCGS_ProcessCommand(args->command, response, sizeof(response)) != ERROR_SUCCESS) {
         printf ("Error processing command\n");
+        exit(0);
     }
     else {
         printf ("Command processed: %s\n", response);
@@ -216,9 +217,8 @@ int main(int argc, char* argv[])
         }
         
         processCommand(args);
-    }
-    else
-    {
+        exit(0);
+    } else {
         fprintf(stderr, "%s: error -- no device specified for interface: %s\n", argv[0], args->interface);
         listDevices(interface, args);
         exit(1);

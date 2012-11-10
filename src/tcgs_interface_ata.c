@@ -10,46 +10,25 @@
 #include "tcgs_interface_ata.h"
 #include "tcgs_types.h"
 
-
-/*****************************************************************************
- * \brief Map command to ATA interface and send it to TPer. Return response and status.
- *
- * @param[in]  inputCommandBlock      input command block
- * @param[in]  inputPayload           input payload. NULL if command has no data
- * @param[out] tperError              interface command error status
- * @param[out] outputPayload          output payload
- *
- * \return ERROR_SUCCESS if interface command is successfully mapped to ATA transport
- * sent to TPer and the last returned response (error status code and payload). Error code
- * ERROR_INTERFACE is returned otherwise
- *
- *****************************************************************************/
-static TCGS_InterfaceError_t TCGS_ATA_Send(
-    TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
-    TCGS_InterfaceError_t *tperError, void *outputPayload)
+static TCGS_IntefaceParameter_t parameter[] =
 {
-	*tperError = INTERFACE_ERROR_GOOD;
-	return ERROR_SUCCESS;
-}
-
-static void TCGS_ATA_SetParameter(char *name, uint32 value)
-{
-	return;
-}
-
-static uint32 TCGS_ATA_GetParameter(char *name)
-{
-	return 0;
-}
-
-/*
-TCGS_InterfaceDescriptor_t TCGS_ATA_InterfaceDescriptor =
-{
-	INTERFACE_ATA,
-	(TCGS_OpenCommand_t)&TCGS_ATA_Open,
-	(TCGS_IoCommand_t)&TCGS_ATA_Send,
-	(TCGS_SetParameterCommand_t)&TCGS_ATA_SetParameter,
-	(TCGS_GetParameterCommand_t)&TCGS_ATA_GetParameter,
+    {INTERFACE_PARAMETER_ATA_TRANSPORT_MODE,                   (uint32)ATA_TRANSPORT_DMA},
+    {INTERFACE_PARAMETER_ATA_TRUSTED_FEATURE_SUPPORTED,        (uint32)FALSE},
+    {INTERFACE_PARAMETER_ATA_SECURITY_FEATURE_SUPPORTED,       (uint32)FALSE},
+    {INTERFACE_PARAMETER_ATA_SECURITY_FEATURE_ENABLED,         (uint32)FALSE},
+    {INTERFACE_PARAMETER_ATA_EXTENDED_ERROR_FEATURE_SUPPORTED, (uint32)FALSE},
 };
-*/
+
+//* \see TCGS_ATA_GetParameters -- getter of this list
+static TCGS_InterfaceParameters_t parameters[] =
+{
+    sizeof(parameter) / sizeof(parameter[0]),
+    parameter
+};
+
+TCGS_InterfaceParameters_t* TCGS_ATA_GetParameters (void)
+{
+    return parameters;
+}
+
 

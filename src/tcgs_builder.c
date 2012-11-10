@@ -30,7 +30,7 @@ TCGS_Error_t TCGS_PrepareInterfaceCommand(TCGS_InterfaceCommand_t command, uint8
 	case LEVEL0_DISCOVERY:
 		commandBlock->command    = IF_RECV;
 		commandBlock->protocolId = 0x01;
-		commandBlock->length     = 0x01;
+		commandBlock->length     = 512;  //one sector
 		commandBlock->comId      = 0x01;		
 		break;
 	case PACKET:

@@ -49,8 +49,6 @@ TCGS_Level0Discovery_Header_t *TCGS_DecodeLevel0Discovery (void* data)
 		}
         iter = TCGS_GetLevel0DiscoveryNextFeatureHeader(header, iter);
 	}
-#if defined(TCGS_VERBOSE)
-	TCGS_PrintLevel0Discovery(header);
-#endif //defined(TCGS_VERBOSE)
+
 	return header;
 }
