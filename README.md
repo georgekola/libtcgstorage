@@ -1,7 +1,7 @@
 libtcgstorage
 =============
 
-C library for manipulation of storage devices that supports implementation of TCG Storage Opal or Enterprise SSC.
+C library for manipulation of storage devices that supports implementation of TCG Storage Opal and Enterprise SSC.
 
 At the moment when this library was started, no open source solution for the target standards exists. So purposes of this development are stated as the following:
 
@@ -18,3 +18,5 @@ Implementation is based on the next specifications of TCG:
 5. [TCG Storage Interface Interactions Specification Version 1.02, Revision 1.00](http://www.trustedcomputinggroup.org/resources/storage_work_group_storage_interface_interactions_specification)
 6. [TCG Storage Opal Test Cases Specification Version 1.0](http://www.trustedcomputinggroup.org/resources/tcg_storage_opal_test_cases)
 7. [Storage Application Note: Encrypting Drives Compliant with Opal SSC, Version 1.0, Revision 1.0](http://www.trustedcomputinggroup.org/resources/storage_application_note_encrypting_drives_compliant_with_opal_ssc)
+
+This project is started as a very side one by his author who want to share his knowledge of the subject. Feal free to use it for educational and personal needs only. Please contact the author if you want to use this code in commercial project.
