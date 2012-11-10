@@ -12,10 +12,11 @@
 
 static TCGS_IntefaceParameter_t parameter[] =
 {
-    {INTERFACE_PARAMETER_ATA_TRANSPORT_MODE,              (uint32)ATA_TRANSPORT_DMA},
-    {INTERFACE_PARAMETER_ATA_TRUSTED_FEATURE_SUPPORTED,   (uint32)FALSE},
-    {INTERFACE_PARAMETER_ATA_SECURITY_FEATURE_SUPPORTED,  (uint32)FALSE},
-    {INTERFACE_PARAMETER_ATA_SECURITY_FEATURE_ENABLED,    (uint32)FALSE},
+    {INTERFACE_PARAMETER_ATA_TRANSPORT_MODE,                   (uint32)ATA_TRANSPORT_DMA},
+    {INTERFACE_PARAMETER_ATA_TRUSTED_FEATURE_SUPPORTED,        (uint32)FALSE},
+    {INTERFACE_PARAMETER_ATA_SECURITY_FEATURE_SUPPORTED,       (uint32)FALSE},
+    {INTERFACE_PARAMETER_ATA_SECURITY_FEATURE_ENABLED,         (uint32)FALSE},
+    {INTERFACE_PARAMETER_ATA_EXTENDED_ERROR_FEATURE_SUPPORTED, (uint32)FALSE},
 };
 
 //* \see TCGS_ATA_GetParameters -- getter of this list
@@ -30,14 +31,4 @@ TCGS_InterfaceParameters_t* TCGS_ATA_GetParameters (void)
     return parameters;
 }
 
-/*
-TCGS_InterfaceDescriptor_t TCGS_ATA_InterfaceDescriptor =
-{
-	INTERFACE_ATA,
-	(TCGS_OpenCommand_t)&TCGS_ATA_Open,
-	(TCGS_IoCommand_t)&TCGS_ATA_IoCommand,
-	(TCGS_SetParameterCommand_t)&TCGS_ATA_SetParameter,
-	(TCGS_GetParameterCommand_t)&TCGS_ATA_GetParameter,
-};
-*/
 

@@ -118,7 +118,7 @@ static TCGS_Error_t TCGS_ATA_IoCommand_win (
     DWORD BytesReturned;
     uint8 ataOpcode;
     TCGS_InterfaceParameters_t *parameters;
-    bool  isDma = FALSE;
+    bool  isDma = FALSE, isExtendedError = FALSE;
 
     if (NULL == diskHandle) {
         //disk is not opened
@@ -154,6 +154,9 @@ static TCGS_Error_t TCGS_ATA_IoCommand_win (
     parameters = TCGS_ATA_GetParameters();
     if (TCGS_Interface_GetParameter(parameters, INTERFACE_PARAMETER_ATA_TRANSPORT_MODE) == ATA_TRANSPORT_DMA) {
         isDma = TRUE;
+    }
+    if (TCGS_Interface_GetParameter(parameters, INTERFACE_PARAMETER_ATA_EXTENDED_ERROR_FEATURE_SUPPORTED)) {
+        isExtendedError = TRUE;
     }
 
     if (inputCommandBlock->command == IF_SEND) {
@@ -210,8 +213,12 @@ Cmd.taskFileOut0().Status = PTE.CurrentTaskFile[6];
         }
     } else if (pAtaPassThrough->CurrentTaskFile[0] == 0x04) {
         if (pAtaPassThrough->CurrentTaskFile[6] == 0x51) {
-            //TODO: check extended error status supported and map interface code
-            *tperError = INTERFACE_ERROR_COMMON;
+            if (isExtendedError) {
+                //TODO: check extended error status supported and map interface code
+                *tperError = INTERFACE_ERROR_COMMON;
+            } else {
+                *tperError = INTERFACE_ERROR_COMMON;
+            }
         } else {
             RETURN_ERROR(ERROR_INVALID_INTERFACE_STATUS, ERROR_TPER);
         }
