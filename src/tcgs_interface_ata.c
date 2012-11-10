@@ -10,14 +10,24 @@
 #include "tcgs_interface_ata.h"
 #include "tcgs_types.h"
 
-static void TCGS_ATA_SetParameter(char *name, uint32 value)
+static TCGS_IntefaceParameter_t parameter[] =
 {
-	return;
-}
+    {INTERFACE_PARAMETER_ATA_TRANSPORT_MODE,              (uint32)ATA_TRANSPORT_DMA},
+    {INTERFACE_PARAMETER_ATA_TRUSTED_FEATURE_SUPPORTED,   (uint32)FALSE},
+    {INTERFACE_PARAMETER_ATA_SECURITY_FEATURE_SUPPORTED,  (uint32)FALSE},
+    {INTERFACE_PARAMETER_ATA_SECURITY_FEATURE_ENABLED,    (uint32)FALSE},
+};
 
-static uint32 TCGS_ATA_GetParameter(char *name)
+//* \see TCGS_ATA_GetParameters -- getter of this list
+static TCGS_InterfaceParameters_t parameters[] =
 {
-	return 0;
+    sizeof(parameter) / sizeof(parameter[0]),
+    parameter
+};
+
+TCGS_InterfaceParameters_t* TCGS_ATA_GetParameters (void)
+{
+    return parameters;
 }
 
 /*
@@ -25,7 +35,7 @@ TCGS_InterfaceDescriptor_t TCGS_ATA_InterfaceDescriptor =
 {
 	INTERFACE_ATA,
 	(TCGS_OpenCommand_t)&TCGS_ATA_Open,
-	(TCGS_IoCommand_t)&TCGS_ATA_Send,
+	(TCGS_IoCommand_t)&TCGS_ATA_IoCommand,
 	(TCGS_SetParameterCommand_t)&TCGS_ATA_SetParameter,
 	(TCGS_GetParameterCommand_t)&TCGS_ATA_GetParameter,
 };

@@ -45,14 +45,19 @@ static TCGS_InterfaceError_t TCGS_VTper_IoCommand(
 	return TCGS_VTPER_IoCommand(inputCommandBlock, inputPayload, tperError, outputPayload);
 }
 
-static void TCGS_VTper_SetParameter(char *name, uint32 value)
+TCGS_InterfaceParameters_t* TCGS_VTper_GetParameters (void)
 {
-	return;
+    return NULL;
 }
 
-static uint32 TCGS_VTper_GetParameter(char *name)
+TCGS_Error_t TCGS_VTper_SetDeviceParameter (char *name, uint32 value)
 {
-	return 0;
+    return ERROR_INTERFACE;
+}
+
+TCGS_Error_t TCGS_VTper_UpdateDeviceParameters (void)
+{
+    return ERROR_INTERFACE;
 }
 
 TCGS_InterfaceDescriptor_t TCGS_VTper_InterfaceDescriptor =
@@ -61,6 +66,7 @@ TCGS_InterfaceDescriptor_t TCGS_VTper_InterfaceDescriptor =
 	(TCGS_OpenCommand_t)&TCGS_VTper_Init,
 	(TCGS_CloseCommand_t)&TCGS_VTper_Close,
 	(TCGS_IoCommand_t)&TCGS_VTper_IoCommand,
-	(TCGS_SetParameterCommand_t)&TCGS_VTper_SetParameter,
-	(TCGS_GetParameterCommand_t)&TCGS_VTper_GetParameter
+	(TCGS_GetParameters_t)&TCGS_VTper_GetParameters,
+	(TCGS_SetDeviceParameter_t)&TCGS_VTper_SetDeviceParameter,
+	(TCGS_UpdateDeviceParameters_t)&TCGS_VTper_UpdateDeviceParameters,
 };

@@ -17,17 +17,6 @@
 //Mingw32 has not ported ATA_PASS_THROUGH_DIRECT from Windows DDK. Project includes file from Mingw64
 #include "ntddscsi.h"
 
-TCGS_IntefaceParameter_t parameter[] =
-{
-    {"ata.transport_mode", (uint32)ATA_TRANSPORT_DMA},
-};
-
-TCGS_IntefaceParameters_t parameters[] =
-{
-    sizeof(parameter) / sizeof(parameter[0]),
-    parameter
-};
-
 #define BLOCK_SIZE 512
 //TODO: fix handling of x=0
 #define BYTES2BLOCKS(x) (((x - 1) >> 9) + 1)    // fit data to 512 blocks
@@ -66,7 +55,7 @@ static void printErrorMessage(DWORD errorCode)
 }
 
 
-static TCGS_Error_t TCGS_ATA_Open(char* device)
+static TCGS_Error_t TCGS_ATA_Open_win(char* device)
 {
     if (NULL == device) {        
         //null pointer for parameter
@@ -92,7 +81,7 @@ static TCGS_Error_t TCGS_ATA_Open(char* device)
     return ERROR_SUCCESS;
 }
 
-static TCGS_Error_t TCGS_ATA_Close(char* device)
+static TCGS_Error_t TCGS_ATA_Close_win(char* device)
 {
     CloseHandle(diskHandle);
     diskHandle = NULL;
@@ -105,7 +94,7 @@ static TCGS_Error_t TCGS_ATA_Close(char* device)
  * Depending on command direction command can either send data to device
  * or receive data from it.
  *
- * Device shall be opened with TCGS_ATA_Open before.
+ * Device shall be opened with TCGS_ATA_Open_win before.
  *
  * @param[in]  inputCommandBlock      input command block
  * @param[in]  inputPayload           input payload. NULL for read command
@@ -117,9 +106,9 @@ static TCGS_Error_t TCGS_ATA_Close(char* device)
  * and error status code are returned by refference. Error code ERROR_INTERFACE
  * is returned otherwise
  *
- * \see TCGS_ATA_Open
+ * \see TCGS_ATA_Open_win
  *****************************************************************************/
-static TCGS_Error_t TCGS_ATA_Send(
+static TCGS_Error_t TCGS_ATA_IoCommand_win (
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
@@ -128,6 +117,8 @@ static TCGS_Error_t TCGS_ATA_Send(
     ULONG ataBufferSize;
     DWORD BytesReturned;
     uint8 ataOpcode;
+    TCGS_InterfaceParameters_t *parameters;
+    bool  isDma = FALSE;
 
     if (NULL == diskHandle) {
         //disk is not opened
@@ -160,16 +151,19 @@ static TCGS_Error_t TCGS_ATA_Send(
 
     pAtaPassThrough->Length = sizeof(ATA_PASS_THROUGH_DIRECT);
 
+    parameters = TCGS_ATA_GetParameters();
+    if (TCGS_Interface_GetParameter(parameters, INTERFACE_PARAMETER_ATA_TRANSPORT_MODE) == ATA_TRANSPORT_DMA) {
+        isDma = TRUE;
+    }
+
     if (inputCommandBlock->command == IF_SEND) {
         pAtaPassThrough->AtaFlags = ATA_FLAGS_DATA_OUT;
-        //TODO: get POI or DMA from properties
-        ataOpcode = ATA_TRUSTED_SEND;
+        ataOpcode = isDma ? ATA_TRUSTED_SEND_DMA : ATA_TRUSTED_SEND;
         //set ATA command payload
         memmove(pAtaBuffer + sizeof(ATA_PASS_THROUGH_EX), inputPayload, inputCommandBlock->length);
     } else if (inputCommandBlock->command == IF_RECV) {
         pAtaPassThrough->AtaFlags = ATA_FLAGS_DATA_IN;
-        //TODO: get POI or DMA from properties
-        ataOpcode = ATA_TRUSTED_RECEIVE;
+        ataOpcode = isDma ? ATA_TRUSTED_RECEIVE_DMA : ATA_TRUSTED_RECEIVE;
     } else {
         RETURN_ERROR(ERROR_COMMAND_UNSUPPORTED, ERROR_INTERFACE);
     }
@@ -232,24 +226,26 @@ Cmd.taskFileOut0().Status = PTE.CurrentTaskFile[6];
     return ERROR_SUCCESS;
 }
 
-static void TCGS_ATA_SetParameter(char *name, uint32 value)
+
+TCGS_Error_t TCGS_ATA_SetDeviceParameter_win (char *name, uint32 value)
 {
-    return;
+    return ERROR_INTERFACE;
 }
 
-static uint32 TCGS_ATA_GetParameter(char *name)
+static TCGS_Error_t TCGS_ATA_UpdateDeviceParameters_win (void)
 {
-    return 0;
+    return ERROR_SUCCESS;
 }
 
 TCGS_InterfaceDescriptor_t TCGS_ATA_InterfaceDescriptor =
 {
     INTERFACE_ATA,
-    (TCGS_OpenCommand_t)&TCGS_ATA_Open,
-    (TCGS_CloseCommand_t)&TCGS_ATA_Close,
-    (TCGS_IoCommand_t)&TCGS_ATA_Send,
-    (TCGS_SetParameterCommand_t)&TCGS_ATA_SetParameter,
-    (TCGS_GetParameterCommand_t)&TCGS_ATA_GetParameter,
+    (TCGS_OpenCommand_t)&TCGS_ATA_Open_win,
+    (TCGS_CloseCommand_t)&TCGS_ATA_Close_win,
+    (TCGS_IoCommand_t)&TCGS_ATA_IoCommand_win,
+    (TCGS_GetParameters_t)&TCGS_ATA_GetParameters,
+    (TCGS_SetDeviceParameter_t)&TCGS_ATA_SetDeviceParameter_win,
+    (TCGS_UpdateDeviceParameters_t)&TCGS_ATA_UpdateDeviceParameters_win,
 };
 
 #endif //(defined(_WIN32) || defined(_WIN64))

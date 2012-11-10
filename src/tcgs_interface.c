@@ -106,7 +106,7 @@ TCGS_InterfaceError_t TCGS_Interface_IoCommand(
     return error;
 }
 
-void TCGS_Interface_SetParameter(TCGS_IntefaceParameters_t *params, char *name, uint32 value)
+void TCGS_Interface_SetParameter(TCGS_InterfaceParameters_t *params, char *name, uint32 value)
 {
 	int i;
 
@@ -118,7 +118,7 @@ void TCGS_Interface_SetParameter(TCGS_IntefaceParameters_t *params, char *name, 
 	}
 }
 
-uint32 TCGS_Interface_GetParameter(TCGS_IntefaceParameters_t *params, char *name)
+uint32 TCGS_Interface_GetParameter(TCGS_InterfaceParameters_t *params, char *name)
 {
 	int i;
 

@@ -17,16 +17,22 @@ TCGS_IntefaceParameter_t parameter[] =
 	{"ata.transport_mode", (uint32)ATA_TRANSPORT_DMA},
 };
 
-TCGS_IntefaceParameters_t parameters[] =
+TCGS_InterfaceParameters_t parameters[] =
 {
 	sizeof(parameter) / sizeof(parameter[0]),
 	parameter
 };
 
 
-static TCGS_Error_t TCGS_ATA_Open(char* device)
+static TCGS_Error_t TCGS_ATA_Open_unix(char* device)
 {
-	printf("(not implemented)");
+	printf("TCGS_ATA_Open_unix -- (not implemented)\n");
+    return ERROR_INTERFACE;
+}
+
+static TCGS_Error_t TCGS_ATA_Close_unix(char* device)
+{
+	printf("TCGS_ATA_Close_unix -- (not implemented)\n");
     return ERROR_INTERFACE;
 }
 
@@ -43,29 +49,20 @@ static TCGS_Error_t TCGS_ATA_Open(char* device)
  * ERROR_INTERFACE is returned otherwise
  *
  *****************************************************************************/
-static TCGS_Error_t TCGS_ATA_Send(
+static TCGS_Error_t TCGS_ATA_IoCommand_unix (
     TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
     TCGS_InterfaceError_t *tperError, void *outputPayload)
 {
-	printf("(not implemented)");
+	printf("TCGS_ATA_IoCommand_unix -- (not implemented)\n");
     return ERROR_INTERFACE;
-}
-
-static void TCGS_ATA_SetParameter(char *name, uint32 value)
-{
-	return;
-}
-
-static uint32 TCGS_ATA_GetParameter(char *name)
-{
-	return 0;
 }
 
 TCGS_InterfaceDescriptor_t TCGS_ATA_InterfaceDescriptor =
 {
 	INTERFACE_ATA,
-	(TCGS_OpenCommand_t)&TCGS_ATA_Open,
-	(TCGS_IoCommand_t)&TCGS_ATA_Send,
+	(TCGS_OpenCommand_t)&TCGS_ATA_Open_unix,
+	(TCGS_CloseCommand_t)&TCGS_ATA_Close_unix,
+	(TCGS_IoCommand_t)&TCGS_ATA_IoCommand_unix,
 	(TCGS_SetParameterCommand_t)&TCGS_ATA_SetParameter,
 	(TCGS_GetParameterCommand_t)&TCGS_ATA_GetParameter,
 };

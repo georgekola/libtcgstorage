@@ -94,6 +94,56 @@ extern TCGS_InterfaceName_t TCGS_InterfaceNames[];
 TCGS_Interface_t TCGS_Interface_GetCode(char *name);
 
 /*****************************************************************************
+ * Structures and functions to work with interface parameters. There are two
+ * types of interface parameters -- configurations and device properties. 
+ * First are used to configure work with interface (i.e. PIO or DMA mode
+ * of trusted commands for ATA interface). Second reflect properties of device
+ * received with device informational command (i.e. IDENTIFY DEVICE for ATA 
+ * interface)
+ *
+ * \see TCGS_InterfaceParameters_t, 
+ *****************************************************************************/
+
+#define MAX_INTERFACE_PARAMETER_NAME_LENGTH 32
+
+/*****************************************************************************
+ * Single interface parameter. It is identified by name and contains some
+ * value
+ *
+ * There are two types of interface parameters -- configurations and device
+ * properties. First are used to configure work with interface (i.e. PIO or
+ * DMA mode of ATA trusted commands for ATA interface). Second reflect
+ * properties of device received with device informational command (i.e.
+ * IDENTIFY DEVICE for ATA interface)
+ *
+ * \see TCGS_InterfaceParameters_t
+ */
+typedef struct
+{
+    char                            name[MAX_INTERFACE_PARAMETER_NAME_LENGTH + 1];
+    uint32                          value;
+} TCGS_IntefaceParameter_t;
+
+
+/*****************************************************************************
+ * List of parameters for concrete interface. 
+ * 
+ * Every interface defines and maintains its list of parameters. It initializes
+ * configurations and device properties in interface function `init`. Device
+ * properties may be updated then by call of interface function
+ * `updateDeviceProperties`
+ * 
+ *
+ * \see TCGS_InterfaceDescriptor_t, TCGS_IntefaceParameter_t
+ */
+typedef struct
+{
+    unsigned length;
+    TCGS_IntefaceParameter_t *param;
+} TCGS_InterfaceParameters_t;
+
+
+/*****************************************************************************
  * \brief Set of functions that constitutes transport interface
  *****************************************************************************/
 typedef TCGS_Error_t (*TCGS_OpenCommand_t) (char *device);
@@ -125,11 +175,11 @@ typedef TCGS_InterfaceError_t (*TCGS_IoCommand_t)
     (TCGS_CommandBlock_t *inputCommandBlock,  void *inputPayload,
      TCGS_InterfaceError_t *interfaceError, void *outputPayload);
 
-typedef void    (*TCGS_SetParameterCommand_t)   (char *name, uint32 value);
+typedef TCGS_InterfaceParameters_t*  (*TCGS_GetParameters_t) (void);
 
-typedef uint32  (*TCGS_GetParameterCommand_t)   (char *name);
+typedef TCGS_Error_t (*TCGS_SetDeviceParameter_t) (char *name, uint32 value);
 
-typedef TCGS_Error_t (*TCGS_UpdateDeviceParameters) (void);
+typedef TCGS_Error_t (*TCGS_UpdateDeviceParameters_t) (void);
 
 /*****************************************************************************
  * \brief Interface descriptor
@@ -147,61 +197,10 @@ typedef struct
     TCGS_OpenCommand_t   open;
     TCGS_CloseCommand_t  close;
     TCGS_IoCommand_t     send;
-    TCGS_SetParameterCommand_t setParameter;
-    TCGS_GetParameterCommand_t getParameter;
-    TCGS_UpdateDeviceParameters updateDeviceParameters;
+    TCGS_GetParameters_t getParameters;
+    TCGS_SetDeviceParameter_t setDeviceParameter;
+    TCGS_UpdateDeviceParameters_t updateDeviceParameters;
 } TCGS_InterfaceDescriptor_t;
-
-
-/*****************************************************************************
- * Structures and functions to work with interface parameters. There are two
- * types of interface parameters -- configurations and device properties. 
- * First are used to configure work with interface (i.e. PIO or DMA mode
- * of trusted commands for ATA interface). Second reflect properties of device
- * received with device informational command (i.e. IDENTIFY DEVICE for ATA 
- * interface)
- *
- * \see TCGS_IntefaceParameters_t, 
- *****************************************************************************/
-
-#define MAX_INTERFACE_PARAMETER_NAME_LENGTH 32
-
-/*****************************************************************************
- * Single interface parameter. It is identified by name and contains some
- * value
- *
- * There are two types of interface parameters -- configurations and device
- * properties. First are used to configure work with interface (i.e. PIO or
- * DMA mode of ATA trusted commands for ATA interface). Second reflect
- * properties of device received with device informational command (i.e.
- * IDENTIFY DEVICE for ATA interface)
- *
- * \see TCGS_IntefaceParameters_t
- */
-typedef struct
-{
-    char                            name[MAX_INTERFACE_PARAMETER_NAME_LENGTH + 1];
-    uint32                          value;
-} TCGS_IntefaceParameter_t;
-
-
-/*****************************************************************************
- * List of parameters for concrete interface. 
- * 
- * Every interface defines and maintains its list of parameters. It initializes
- * configurations and device properties in interface function `init`. Device
- * properties may be updated then by call of interface function
- * `updateDeviceProperties`
- * 
- *
- * \see TCGS_InterfaceDescriptor_t, TCGS_IntefaceParameter_t
- */
-typedef struct
-{
-    unsigned length;
-    TCGS_IntefaceParameter_t *param;
-} TCGS_IntefaceParameters_t;
-
 
 /*****************************************************************************
  * \brief Set new transport interface descriptor
