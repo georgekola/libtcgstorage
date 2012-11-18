@@ -19,4 +19,6 @@ Implementation is based on the next specifications of TCG:
 6. [TCG Storage Opal Test Cases Specification Version 1.0](http://www.trustedcomputinggroup.org/resources/tcg_storage_opal_test_cases)
 7. [Storage Application Note: Encrypting Drives Compliant with Opal SSC, Version 1.0, Revision 1.0](http://www.trustedcomputinggroup.org/resources/storage_application_note_encrypting_drives_compliant_with_opal_ssc)
 
-This project is started as a very side one by his author who want to share his knowledge of the subject. Feal free to use it for educational and personal needs only. Please contact the author if you want to use this code in commercial project.
+This project is started as a very side one by its author who wants to share his knowledge of the subject. Feal free to use it for educational and personal needs only. Please contact the author if you want to use this code in commercial project.
+
+--artem
