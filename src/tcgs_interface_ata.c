@@ -20,15 +20,15 @@ static TCGS_IntefaceParameter_t parameter[] =
 };
 
 //* \see TCGS_ATA_GetParameters -- getter of this list
-static TCGS_InterfaceParameters_t parameters[] =
+static TCGS_InterfaceParameters_t parameters =
 {
-    sizeof(parameter) / sizeof(parameter[0]),
+    SIZEOF_ARRAY(parameter),
     parameter
 };
 
 TCGS_InterfaceParameters_t* TCGS_ATA_GetParameters (void)
 {
-    return parameters;
+    return &parameters;
 }
 
 

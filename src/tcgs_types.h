@@ -54,4 +54,6 @@ void TCGS_SetError(TCGS_ErrorCode_t errorCode);
 
 #define RETURN_ERROR(errorCode, errorType) TCGS_SetError(errorCode); return errorType;
 
+#define SIZEOF_ARRAY(array) ((sizeof(array))/(sizeof(array[0])))
+
 #endif //_TCGS_TYPES_H

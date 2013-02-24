@@ -17,6 +17,7 @@
 #include "tcgs_interface.h"
 #include "tcgs_stream.h"
 #include "tcgs_builder.h"
+#include "tcgs_verbose.h"
 #include "tcgs_interface_encode.h"
 
       
@@ -33,7 +34,7 @@
  *****************************************************************************/
 void TCGS_InitHost(TCGS_InterfaceDescriptor_t *interfaceDesc)
 {
-    TCGS_Interface_SetDescripor(interfaceDesc);
+    TCGS_Interface_SetDescriptor(interfaceDesc);
 }
 
 /*****************************************************************************
@@ -92,7 +93,6 @@ TCGS_Error_t TCGS_Level0Discovery(void)
     TCGS_Error_t status;
     TCGS_InterfaceError_t errorInterface;
     TCGS_Level0Discovery_Header_t *header;
-    TCGS_Level0Discovery_FeatureTper_t *headerTper;
 
     TCGS_PrepareInterfaceCommand(LEVEL0_DISCOVERY, NULL, &commandBlock, NULL);
     status = TCGS_Interface_IoCommand(&commandBlock, NULL, &errorInterface, &TCGS_Buffer_Level0Discovery);

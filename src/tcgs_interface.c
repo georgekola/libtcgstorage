@@ -20,7 +20,7 @@
 /// Current interface descriptor
 static TCGS_InterfaceDescriptor_t *TCGS_InterfaceDesc = NULL;
 
-void TCGS_Interface_SetDescripor(TCGS_InterfaceDescriptor_t *descriptor)
+void TCGS_Interface_SetDescriptor(TCGS_InterfaceDescriptor_t *descriptor)
 {
 	TCGS_InterfaceDesc = descriptor;
 }
