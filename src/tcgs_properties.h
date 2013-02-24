@@ -9,7 +9,7 @@
 #ifndef _TCGS_PROPERTIES_H
 #define _TCGS_PROPERTIES_H
 
-#include "TCGS_types.h"
+#include "tcgs_types.h"
 
 #define MAX_PROPERTIES_NAME_LENGHT 32 + 1
 

@@ -111,7 +111,7 @@ void test_properties(void **state)
     assert_int_equal(count, properties_host->size);
 
     property = TCGS_get_property_by_name(properties_host, "test");
-    assert_int_not_equal(property, NULL);
+    assert_int_not_equal((int)property, (int)NULL);
     assert_string_equal("test", property->name);
     assert_int_equal(1111, property->value);
 
