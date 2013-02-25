@@ -15,10 +15,17 @@
 //list of static properties for communication minimum
  const TCGS_Property properties_minimum[] =
 {
-	{"asdf", 12},
-	{"gbk", 46},
-	{"jhj", 98},
-	{"kj", 44},
+    {"MaxSubpackets", 1},
+    {"MaxPacketSize", 1004},
+    {"MaxPackets", 1},
+    {"MaxComPacketSize", 1024},
+    {"MaxIndTokenSize", 968},
+    {"MaxAggTokenSize", 968},
+    {"MaxMethods", 1},
+    {"ContinuedTokens", 0},
+    {"SequenceNumbers", 0},
+    {"AckNAK", 0},
+    {"Asynchronous", 0},
 };
 
 //element of properties list
@@ -74,6 +81,28 @@ static TCGS_Properties_Element *TCGS_add_property(TCGS_Properties_Element *prope
 	return property_element_new;
 }
 
+TCGS_Error_t properties_set_minimum(TCGS_Properties *properties)
+{
+    int i;
+
+    TCGS_free_properties(properties);
+
+    // initialise properties list with terminator
+    properties->properties = callocate(sizeof(TCGS_Property));
+    properties->iterator = (TCGS_Properties_Element*) properties->properties;
+    properties->size = 0;
+
+    for (i = 0; i < SIZEOF_ARRAY(properties_minimum); i++) {
+        if ((properties->iterator = TCGS_add_property(properties->iterator, (TCGS_Property*)&properties_minimum[i])) == NULL) {
+            return ERROR_TPER;
+        }
+        properties->size++;
+    }
+    properties_iterator_set_first(properties->iterator, properties);
+
+    return ERROR_SUCCESS;
+}
+
 /*
  * \brief Init properties
  *
@@ -81,19 +110,7 @@ static TCGS_Properties_Element *TCGS_add_property(TCGS_Properties_Element *prope
  */
 TCGS_Error_t TCGS_init_properties()
 {
-	int i;
-	TCGS_Properties_Element *tail;
-
-	// initialise properties lists with terminators
-	properties_host.properties = callocate(sizeof(TCGS_Property));
-    tail = (TCGS_Properties_Element*) properties_host.properties;
-
-	for (i = 0; i < SIZEOF_ARRAY(properties_minimum); i++) {
-		if ((tail = TCGS_add_property(tail, (TCGS_Property*)&properties_minimum[i])) == NULL) {
-			return ERROR_TPER;
-		}
-		properties_host.size++;
-	}
+	properties_set_minimum(&properties_host);
 
 	return ERROR_SUCCESS;
 }
@@ -184,9 +201,16 @@ void TCGS_free_properties(TCGS_Properties *properties)
 {
     TCGS_Properties_Element *element;
     properties_iterator_set_first((TCGS_Properties_Element**)&properties->iterator, properties);
+
+    if (properties->iterator == NULL) {
+        return;
+    }
     while (properties_iterator_check_last(properties->iterator)) {
         element = properties->iterator;
         properties_iterator_move_next((TCGS_Properties_Element**)&properties->iterator);
         free(element);
     }
+    //free terminator
+    free(properties->iterator);
+    memset(properties, 0, sizeof(TCGS_Properties));
 }

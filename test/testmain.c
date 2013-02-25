@@ -101,6 +101,8 @@ void test_properties(void **state)
     assert_int_equal(TCGS_init_properties(), ERROR_SUCCESS);
 
     properties_host = TCGS_get_properties_host();
+    property = TCGS_get_property_by_name(properties_host, "test");
+    assert_int_equal((int)property, (int)NULL);
     TCGS_append_property(properties_host, &property_check);
 
     property = TCGS_get_property_first(properties_host);
